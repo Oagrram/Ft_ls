@@ -49,7 +49,7 @@ typedef struct file_struct
     t_flist      *lst;
 }                sys;
 
-void    *printlist(t_flist      **head);
+void    printlist(t_flist      **head);
 void    printfile(t_flist **head, char *name);
 void freelist(t_flist *head);
 

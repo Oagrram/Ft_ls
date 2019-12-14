@@ -1,11 +1,11 @@
 
 #include "ls.h"
 
-void    *printlist(t_flist      **head)
+void    printlist(t_flist      **head)
 {
     t_flist *tmp;
 
-    tmp = (*head);
+    tmp = *head;
     while ((*head)->next != NULL)
     {
         ft_putchar((*head)->type);
@@ -26,12 +26,11 @@ void    *printlist(t_flist      **head)
         (*head)=(*head)->next;
     }
     freelist(tmp);
-    //return (tmp);
 }
 
 void    printfile(t_flist      **head, char *name)
 {
-       ft_putchar((*head)->type);
+        ft_putchar((*head)->type);
         ft_putstr((*head)->permision);
         ft_putstr("  ");
         ft_putnbr((*head)->nlink);
