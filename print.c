@@ -28,12 +28,6 @@ void    printlist(t_flist      **head)
         (*head)=(*head)->next;
     }
     freelist(&tmp);
-    printf("after free\n");
-    while(tmp2->next != NULL)
-    {
-        printf("tmp.lst->name == %s\n",tmp2->name);
-        tmp2=tmp2->next;
-    }
 }
 
 void    printfile(t_flist      **head, char *name)
@@ -58,10 +52,8 @@ void    printfile(t_flist      **head, char *name)
 void freelist(t_flist **head)
 {
    t_flist *tmp;
-   //o int i = 1;
    while (*head != NULL)
     {
-        //printf("node number %d named %s has been free\n",i++,(*head)->name);
        tmp = *head;
        *head = (*head)->next;
        free(tmp);
