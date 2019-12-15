@@ -51,6 +51,6 @@ typedef struct file_struct
 
 void    printlist(t_flist      **head);
 void    printfile(t_flist **head, char *name);
-void freelist(t_flist *head);
+void freelist(t_flist **head);
 
 #endif

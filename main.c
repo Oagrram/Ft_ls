@@ -28,16 +28,16 @@ void     getpermition(struct stat fileStat, t_flist **node)
     group = getgrgid(user->pw_gid);
     (*node)->permision[0] = ( (fileStat.st_mode & S_IRUSR) ? 'r' : '-');
     (*node)->permision[1] = ( (fileStat.st_mode & S_IWUSR) ? 'w' : '-');
-    printf("res == %o S_IWUSR == %o mode == %o\n",(fileStat.st_mode & S_IWUSR),S_IWUSR,fileStat.st_mode);
+    //printf("res == %o S_IWUSR == %o mode == %o\n",(fileStat.st_mode & S_IWUSR),S_IWUSR,fileStat.st_mode);
     (*node)->permision[2] = ( (fileStat.st_mode & S_IXUSR) ? 'x' : '-');
     (*node)->permision[3] = ( (fileStat.st_mode & S_IRGRP) ? 'r' : '-');
     (*node)->permision[4] = ( (fileStat.st_mode & S_IWGRP) ? 'w' : '-');
     (*node)->permision[5] = ( (fileStat.st_mode & S_IXGRP) ? 'x' : '-'); 
     (*node)->permision[6] = ( (fileStat.st_mode & S_IROTH) ? 'r' : '-');
     (*node)->permision[7] = ( (fileStat.st_mode & S_IWOTH) ? 'w' : '-');
-    printf("res == %o S_IWOTH == %o mode == %o\n",(fileStat.st_mode & S_IWOTH),S_IWOTH,fileStat.st_mode);
+    //printf("res == %o S_IWOTH == %o mode == %o\n",(fileStat.st_mode & S_IWOTH),S_IWOTH,fileStat.st_mode);
     (*node)->permision[8] = ( (fileStat.st_mode & S_IXOTH) ? 'x' : '-');
-    printf("res == %o S_IXOTH == %o mode == %o\n",(fileStat.st_mode & S_IXOTH),S_IXOTH,fileStat.st_mode);
+    //printf("res == %o S_IXOTH == %o mode == %o\n",(fileStat.st_mode & S_IXOTH),S_IXOTH,fileStat.st_mode);
     (*node)->permision[9] = (' ');
     (*node)->permision[9] = ('\0');
     (*node)->nlink = (fileStat.st_nlink);
@@ -106,6 +106,7 @@ int     ft_flist(char *name)
             arg.lst->next = NULL;
         }
          printlist(&arg.head);
+         
         //freelist(tmp);
         closedir(arg.dir);
     }

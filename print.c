@@ -4,8 +4,10 @@
 void    printlist(t_flist      **head)
 {
     t_flist *tmp;
+    t_flist *tmp2;
 
     tmp = *head;
+    tmp2 = tmp;
     while ((*head)->next != NULL)
     {
         ft_putchar((*head)->type);
@@ -14,7 +16,7 @@ void    printlist(t_flist      **head)
         ft_putnbr((*head)->nlink);
         ft_putchar(9);
         ft_putstr((*head)->user);
-        ft_putchar(9);
+        ft_putstr("  ");
         ft_putstr((*head)->groupe);
         ft_putchar(9);
         ft_putnbr((*head)->size);
@@ -25,7 +27,13 @@ void    printlist(t_flist      **head)
         ft_putchar('\n');
         (*head)=(*head)->next;
     }
-    freelist(tmp);
+    freelist(&tmp);
+    printf("after free\n");
+    while(tmp2->next != NULL)
+    {
+        printf("tmp.lst->name == %s\n",tmp2->name);
+        tmp2=tmp2->next;
+    }
 }
 
 void    printfile(t_flist      **head, char *name)
@@ -47,14 +55,15 @@ void    printfile(t_flist      **head, char *name)
         ft_putchar('\n');
 }
 
-void freelist(t_flist *head)
+void freelist(t_flist **head)
 {
    t_flist *tmp;
-
-   while (head != NULL)
+   //o int i = 1;
+   while (*head != NULL)
     {
-       tmp = head;
-       head = head->next;
+        //printf("node number %d named %s has been free\n",i++,(*head)->name);
+       tmp = *head;
+       *head = (*head)->next;
        free(tmp);
     }
 }
