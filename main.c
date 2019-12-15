@@ -123,6 +123,8 @@ int     ft_flist(char *name)
 int     main(int argc,char **argv)
 {
     argc = 2;
+    printf("\n-\t-\t-\t-\t-\t-\t-\t-");
+    printf("\n\n");
    ft_flist(argv[1]);
     return (0);
 }
