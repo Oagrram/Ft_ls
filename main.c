@@ -122,8 +122,7 @@ int     ft_flist(char *name)
 
 int     main(int argc,char **argv)
 {
-    printf("arg = %d\n",argc);
-    printf("-----------------\n");
+    argc = 2;
    ft_flist(argv[1]);
     return (0);
 }
