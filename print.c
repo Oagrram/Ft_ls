@@ -8,7 +8,7 @@ void    printlist(t_flist      **head)
 
     tmp = *head;
     tmp2 = tmp;
-    while ((*head)->next != NULL)
+    while ((*head) != NULL)
     {
         ft_putchar((*head)->type);
         ft_putstr((*head)->permision);

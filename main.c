@@ -77,7 +77,9 @@ char   getfiletype(mode_t    mode)
 
 int stockage(struct stat fileStat , t_flist **node)
 {
-
+    (*node)->mtime = fileStat.st_mtime;
+   // printf("mtime == %ld of %s\n",fileStat.st_mtime,(*node)->name);
+    (*node)->mtime = fileStat.st_mtime;
     (*node)->time= ft_strsub(ctime(&fileStat.st_mtime),4,12);
     (*node)->type= getfiletype(fileStat.st_mode);
     getpermition(fileStat,&(*node));
@@ -90,23 +92,32 @@ int     ft_flist(char *name)
    // t_flist *tmp;
 
     stat(name, &(arg.fileStat));
-    arg.lst = (t_flist*)malloc(sizeof(t_flist));
-    if(S_ISDIR(arg.fileStat.st_mode))
+    //arg.head = (t_flist*)ft_memalloc(sizeof(t_flist));
+    arg.head = NULL;
+    if (S_ISDIR(arg.fileStat.st_mode))
     {
-        arg.head = arg.lst;
-        arg.dir = opendir(name);
+        if (!(arg.dir = opendir(name)))
+        {
+            perror("ft_ls :");
+            return (0);
+        }
         while((arg.sd = readdir(arg.dir)) != NULL)
         {
+            arg.lst =  (t_flist*)ft_memalloc(sizeof(t_flist));
+            arg.path = ft_strjoin(name, "/");
             arg.path = ft_strjoin(name, (arg.sd)->d_name);
-            arg.lst->name= (arg.sd)->d_name;
-            stat(arg.path,&(arg.fileStat));
+            arg.lst->name = ft_strdup((arg.sd)->d_name);
+            lstat(arg.path, &(arg.fileStat)); 
             stockage(arg.fileStat,&arg.lst);
-            arg.lst->next =  (t_flist*) malloc(sizeof(t_flist));
-            arg.lst = arg.lst->next;
-            arg.lst->next = NULL;
+           // arg.lst->next =  (t_flist*) malloc(sizeof(t_flist));
+           // arg.lst = arg.lst->next;
+            //arg.lst->next = NULL;
+            arg.lst->mtime = arg.fileStat.st_mtime;
+            sort_by_time(&arg.lst, &arg.head);
+          //  printlist(&arg.head);
+            //printf("\n==============\n");
         }
          printlist(&arg.head);
-         
         //freelist(tmp);
         closedir(arg.dir);
     }

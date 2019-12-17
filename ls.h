@@ -30,6 +30,7 @@ typedef struct  filenode
 {
     int         nlink; 
     int         size;
+    int         mtime;
     char        type;
     char        *name;
     char        *time;
@@ -52,5 +53,7 @@ typedef struct file_struct
 void    printlist(t_flist      **head);
 void    printfile(t_flist **head, char *name);
 void freelist(t_flist **head);
+t_flist *sort_by_time(t_flist **node, t_flist **lst);
+void    swapelement(t_flist **node, t_flist **next);
 
 #endif
