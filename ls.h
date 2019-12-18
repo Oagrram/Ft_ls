@@ -38,6 +38,7 @@ typedef struct  filenode
     char        *user;
     char        permision[11];
     struct      filenode *next;
+    struct      filenode *previous;
 }                t_flist;
 
 typedef struct file_struct
@@ -47,8 +48,8 @@ typedef struct file_struct
     char         *path;
     DIR          *dir;
     t_flist      *head;
-    t_flist      *lst;
-}                sys;
+    t_flist      *node;
+}                data;
 
 void    printlist(t_flist      **head);
 void    printfile(t_flist **head, char *name);

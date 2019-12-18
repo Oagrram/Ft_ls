@@ -7,10 +7,10 @@ t_flist *sort_by_time(t_flist **node, t_flist **lst)
     t_flist *ptr;
     t_flist *tmp;
 
-    printf("receive : <%s>\n", (*node)->name);
     if (!*lst)
     {
         *lst = *node;
+
         return (*lst);
     }
     ptr = *lst;

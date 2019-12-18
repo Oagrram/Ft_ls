@@ -24,7 +24,8 @@ void    printlist(t_flist      **head)
         ft_putstr((*head)->time);
         ft_putchar(9);
         ft_putstr((*head)->name);
-        ft_putchar('\n');
+        //ift_putchar('\n');
+        printf("     <%d>   \n",(*head)->mtime);
         (*head)=(*head)->next;
     }
     freelist(&tmp);
