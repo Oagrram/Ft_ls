@@ -104,9 +104,6 @@ int     ft_flist(char *name)
             system.node->name = ft_strdup((system.sd)->d_name);
             lstat(system.path, &(system.fileStat)); 
             stockage(system.fileStat,&system.node);
-           // system.node->next =  (t_flist*) malloc(sizeof(t_flist));
-           // system.node = system.node->next;
-            //system.node->next = NULL;
             system.node->mtime = system.fileStat.st_mtime;
             //sort_by_ascii(&system.node, &system.head);
             sort_by_time(&system.node, &system.head);
