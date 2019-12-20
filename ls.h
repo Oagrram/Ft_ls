@@ -52,9 +52,12 @@ typedef struct file_struct
 }                data;
 
 void    printlist(t_flist      **head);
-void    printfile(t_flist **head, char *name);
+void    printnode(t_flist      **head);
+
 void freelist(t_flist **head);
 t_flist *sort_by_time(t_flist **node, t_flist **lst);
+t_flist *sort_by_ascii(t_flist **node, t_flist **lst);
 void    swapelement(t_flist **node, t_flist **next);
+void reverse_lst(t_flist      **lst);
 
 #endif
