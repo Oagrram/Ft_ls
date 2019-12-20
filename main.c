@@ -75,7 +75,6 @@ char   getfiletype(mode_t    mode)
 int stockage(struct stat fileStat , t_flist **node)
 {
     (*node)->mtime = fileStat.st_mtime;
-    (*node)->mtime = fileStat.st_mtime;
     (*node)->time= ft_strsub(ctime(&fileStat.st_mtime),4,12);
     (*node)->type= getfiletype(fileStat.st_mode);
     getpermition(fileStat,&(*node));
@@ -104,12 +103,14 @@ int     ft_flist(char *name)
             system.node->name = ft_strdup((system.sd)->d_name);
             lstat(system.path, &(system.fileStat)); 
             stockage(system.fileStat,&system.node);
-            system.node->mtime = system.fileStat.st_mtime;
+           // system.node->next =  (t_flist*) malloc(sizeof(t_flist));
+           // system.node = system.node->next;
+            //system.node->next = NULL;
             //sort_by_ascii(&system.node, &system.head);
             sort_by_time(&system.node, &system.head);
         }
-        //printlist(&system.head);
-        reverse_lst(&system.head);
+        printlist(&system.head);
+        //reverse_lst(&system.head);
         freelist(&system.head);
         closedir(system.dir);
     }
