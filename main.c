@@ -72,21 +72,56 @@ char   getfiletype(mode_t    mode)
     return('?');
 }
 
-int stockage(struct stat fileStat , t_flist **node)
+int stockage(struct stat fileStat , t_flist **node, char *name)
 {
+    (*node)->name = ft_strdup(name);
     (*node)->mtime = fileStat.st_mtime;
-    (*node)->time= ft_strsub(ctime(&fileStat.st_mtime),4,12);
+    (*node)->time= ft_strsub(ctime(&fileStat.st_mtime), 4, 12);
     (*node)->type= getfiletype(fileStat.st_mode);
     getpermition(fileStat,&(*node));
     return (0);
 }
 
-int     ft_flist(char *name)
+int ft_readdir(data system, char *name)
+{
+    t_flist *tmp;
+
+    system.head = NULL;
+    while((system.sd = readdir(system.dir)) != NULL)
+    {
+        system.node =  new_node();
+        system.path = ft_strjoin(name, "/");
+        system.path = ft_strjoin(system.path, (system.sd)->d_name);
+        lstat(system.path, &(system.fileStat)); 
+        stockage(system.fileStat, &system.node, (system.sd)->d_name);
+        // sort_by_time(&system.node, &system.head);
+          sort_by_ascii(&system.node, &system.head);
+    }
+    closedir(system.dir);
+    tmp = system.head;
+    printlist(&system.head);
+    // reverse_lst(&system.head);
+   ft_check_folder(&tmp,name);
+    //freelist(&system.head);
+    return (0);
+}
+
+int     ft_get_info(char *name, file_flags *flags)
 {
     data       system;
-
+    
+    printf("l == %d\n",flags->flag_l);
+    if (flags->flag_l == 1)
+        printf(" l \n");
+    if (flags->flag_a == 1)
+            printf(" a \n");
+    if (flags->flag_r == 1)
+        printf(" r \n");
+    if (flags->flag_R == 1)
+        printf(" R \n");
+     if (flags->flag_t == 1)
+        printf(" t \n");
     lstat(name, &(system.fileStat));
-    system.head = NULL;
     if (S_ISDIR(system.fileStat.st_mode))
     {
         if (!(system.dir = opendir(name)))
@@ -95,40 +130,62 @@ int     ft_flist(char *name)
             perror("ft_ls :");
             return (0);
         }
-        while((system.sd = readdir(system.dir)) != NULL)
-        {
-            system.node =  new_node();
-            system.path = ft_strjoin(name, "/");
-            system.path = ft_strjoin(name, (system.sd)->d_name);
-            system.node->name = ft_strdup((system.sd)->d_name);
-            lstat(system.path, &(system.fileStat)); 
-            stockage(system.fileStat,&system.node);
-           // system.node->next =  (t_flist*) malloc(sizeof(t_flist));
-           // system.node = system.node->next;
-            //system.node->next = NULL;
-            //sort_by_ascii(&system.node, &system.head);
-            sort_by_time(&system.node, &system.head);
-        }
-        printlist(&system.head);
-        //reverse_lst(&system.head);
-        freelist(&system.head);
-        closedir(system.dir);
+        ft_readdir(system, name);
     }
-    /*else
+    else
     {
-        stockage(system.fileStat,&system.node);
-        system.node->next=NULL;
-        printfile(&system.node,name);
-        free(system.node);
-    }*/
+        system.node =  new_node();
+        stockage(system.fileStat,&system.node, name);
+        printlist(&system.node);
+        freelist(&system.node);
+    }
     return (0);
 }
 
 int     main(int argc,char **argv)
 {
     argc = 2;
+    file_flags flags;
+    int i = 0;
+    int j = -1;
+    if (flags.flag_a == 0 )
+    {
+            printf("path est null \n");
+    }
+    printf("total %d\n",(l+a));
     printf("\n-\t-\t-\t-\t-\t-\t-\t-");
     printf("\n\n");
-   ft_flist(argv[1]);
+   // ft_get_info(argv[1]);
+    printf("argv[0][0] = %c\n",argv[1][0]);
+    while (argv[++i])
+    {
+        while(argv[i][0] == '-' && argv[i][++j])
+        {
+            if (j != 0 && argv[i][j] != 'l' && argv[i][j] != 'a' && argv[i][j] != 'r' && argv[i][j] != 'R' && argv[i][j] != 't')
+            {
+                printf("Error\n");
+                break;
+            }
+            else
+                {
+                     if (argv[i][j] != 'l')
+                         flags.flag_l = 1;
+                     if (argv[i][j] != 'a')
+                        flags.flag_a = 1;
+                     if (argv[i][j] != 'r')
+                        flags.flag_r = 1;
+                     if (argv[i][j] != 'R')
+                        flags.flag_R = 1;
+                     if (argv[i][j] != 't')
+                        flags.flag_t = 1;
+                }
+        }
+        j = 0;
+        //printf("l == %d\n",flags.flag_l);
+        // if (!(argv[i][0] == '-'))
+        // {
+        //     //ft_get_info(argv[i] , &flags);
+        // }
+    }
     return (0);
 }

@@ -26,6 +26,22 @@
 # include <grp.h>
 # include <time.h>
 
+#define l 1
+#define a 2
+#define t 3
+#define r 4
+#define R 5
+
+typedef struct  flag
+{
+    int         flag_l;
+    int         flag_a;
+    int         flag_r;
+    int         flag_t;
+    int         flag_R;
+}   file_flags;
+
+
 typedef struct  filenode
 {
     int         nlink; 
@@ -50,10 +66,11 @@ typedef struct file_struct
     t_flist      *head;
     t_flist      *node;
 }                data;
-
+int     ft_get_info(char *name, file_flags *flags);
 void    printlist(t_flist      **head);
 void    printnode(t_flist      **head);
-
+int ft_recursive(char *path);
+int ft_check_folder(t_flist **lst,char *path);
 void freelist(t_flist **head);
 t_flist *sort_by_time(t_flist **node, t_flist **lst);
 t_flist *sort_by_ascii(t_flist **node, t_flist **lst);

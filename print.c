@@ -2,6 +2,25 @@
 #include "ls.h"
 
 
+void    printlist(t_flist **head)
+{
+    t_flist *tmp;
+    t_flist *tmp2;
+
+    tmp = *head;
+    tmp2 = tmp;
+    while ((tmp) != NULL)
+    {
+        printnode(&(tmp));
+        printf("\n");
+        (tmp) = (tmp)->next;
+        //if (tmp)
+        //ft_memdel((void**)&tmp->previous);
+        
+    }
+    freelist(&(tmp));
+}
+
 void reverse_lst(t_flist      **lst)
 {
     t_flist *ptr;
@@ -19,28 +38,6 @@ void reverse_lst(t_flist      **lst)
     }
 
 }
-void    printlist(t_flist      **head)
-{
-    t_flist *tmp;
-    t_flist *tmp2;
-
-    tmp = *head;
-    tmp2 = tmp;
-    while ((*head) != NULL)
-    {
-        printnode(head);
-        //ift_putchar('\n');
-       // printf("     <%d>   \n",(*head)->mtime);
-       if ((*head)->previous)
-       {
-           printf(" \t  <%s>   \n",(*head)->previous->name);
-       }
-       else
-       printf("\n");
-        (*head)=(*head)->next;
-    }
-    freelist(&tmp);
-}
 
 void    printnode(t_flist      **head)
 {
@@ -48,7 +45,7 @@ void    printnode(t_flist      **head)
         ft_putstr((*head)->permision);
         ft_putstr("  ");
         ft_putnbr((*head)->nlink);
-        ft_putchar(9);
+        ft_putchar(' ');
         ft_putstr((*head)->user);
         ft_putchar(9);
         ft_putstr((*head)->groupe);
@@ -64,10 +61,11 @@ void    printnode(t_flist      **head)
 void freelist(t_flist **head)
 {
    t_flist *tmp;
+
    while (*head != NULL)
     {
        tmp = *head;
        *head = (*head)->next;
-       free(tmp);
+       ft_memdel((void**)&(tmp));
     }
 }
