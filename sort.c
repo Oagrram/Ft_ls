@@ -1,5 +1,3 @@
-
-
 #include "ls.h"
 
 t_flist *sort_by_time(t_flist **node, t_flist **lst)
@@ -90,4 +88,4 @@ t_flist *sort_by_ascii(t_flist **node, t_flist **lst)
             *lst = *node;
     }
     return (*lst);
-}
+    }
