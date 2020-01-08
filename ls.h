@@ -26,11 +26,6 @@
 # include <grp.h>
 # include <time.h>
 
-#define l 1
-#define a 2
-#define t 3
-#define r 4
-#define R 5
 
 typedef struct  flag
 {
@@ -57,6 +52,7 @@ typedef struct  filenode
     struct      filenode *previous;
 }                t_flist;
 
+
 typedef struct file_struct
 {
     struct       stat fileStat;
@@ -67,14 +63,17 @@ typedef struct file_struct
     t_flist      *node;
 }                data;
 
+t_flist  *new_node(void);
+int stockage(struct stat fileStat , t_flist **node, char *name);
+char   getfiletype(mode_t    mode);
 int check_flag(char *argv, file_flags *flags);
 int     ft_get_info(char *name, file_flags flags);
 void    printlist(t_flist **head,file_flags flags);
-void    printnode(t_flist      **head, file_flags flags);
+void    printnode(t_flist      **head, file_flags flags, int maxlink);
 int ft_recursive(char *path, file_flags flags);
-int ft_check_folder(t_flist **lst,char *path, file_flags flags);
+void ft_check_folder(t_flist **lst,char *path, file_flags flags);
 void freelist(t_flist **head);
-t_flist *sort_by_time(t_flist **node, t_flist **lst);
+t_flist *sort_by_time(t_flist **head);
 t_flist *sort_by_ascii(t_flist **node, t_flist **lst);
 void    swapelement(t_flist **node, t_flist **next);
 void reverse_lst(t_flist      **lst,file_flags flags);

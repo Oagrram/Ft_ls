@@ -12,75 +12,7 @@
 
 #include "ls.h"
 
-t_flist  *new_node(void)
-{
-    t_flist *node;
-    node =  (t_flist*)ft_memalloc(sizeof(t_flist));
-    return(node);
-}
 
-void     getpermition(struct stat fileStat, t_flist **node)
-{
-    struct passwd *user;
-    struct group *group;
-
-    user = getpwuid(fileStat.st_uid);
-    group = getgrgid(user->pw_gid);
-    (*node)->permision[0] = ( (fileStat.st_mode & S_IRUSR) ? 'r' : '-');
-    (*node)->permision[1] = ( (fileStat.st_mode & S_IWUSR) ? 'w' : '-');
-    (*node)->permision[2] = ( (fileStat.st_mode & S_IXUSR) ? 'x' : '-');
-    (*node)->permision[3] = ( (fileStat.st_mode & S_IRGRP) ? 'r' : '-');
-    (*node)->permision[4] = ( (fileStat.st_mode & S_IWGRP) ? 'w' : '-');
-    (*node)->permision[5] = ( (fileStat.st_mode & S_IXGRP) ? 'x' : '-'); 
-    (*node)->permision[6] = ( (fileStat.st_mode & S_IROTH) ? 'r' : '-');
-    (*node)->permision[7] = ( (fileStat.st_mode & S_IWOTH) ? 'w' : '-');
-    (*node)->permision[8] = ( (fileStat.st_mode & S_IXOTH) ? 'x' : '-');
-    (*node)->permision[9] = (' ');
-    (*node)->permision[9] = ('\0');
-    (*node)->nlink = (fileStat.st_nlink);
-    (*node)->user =(user->pw_name);
-    (*node)->groupe =(group->gr_name);
-    (*node)->size = (fileStat.st_size);
-}
-
-char   getfiletype(mode_t    mode)
-{
-    if (S_ISREG(mode))
-        return ('-');
-    else if (S_ISDIR(mode))
-        return ('d');
-    else if (S_ISBLK(mode))
-       return ('b');
-    else if (S_ISCHR(mode))
-        return ('c');
-    #ifdef S_ISFIFO
-    else if (S_ISFIFO(mode))
-        return ('p');
-    #endif
-    #ifdef S_ISLNK
-    else if (S_ISLNK(mode))
-        return ('l');
-    #endif
-    #ifdef S_ISSOCK
-    else if (S_ISSOCK(mode))
-        return ('s');
-    #endif
-    #ifdef S_ISDOOR
-    else if (S_ISDOOR(mode))
-        return ('D');
-    #endif
-    return('?');
-}
-
-int stockage(struct stat fileStat , t_flist **node, char *name)
-{
-    (*node)->name = ft_strdup(name);
-    (*node)->mtime = fileStat.st_mtime;
-    (*node)->time= ft_strsub(ctime(&fileStat.st_mtime), 4, 12);
-    (*node)->type= getfiletype(fileStat.st_mode);
-    getpermition(fileStat,&(*node));
-    return (0);
-}
 
 int ft_readdir(data system, char *name, file_flags flags)
 {
@@ -92,22 +24,24 @@ int ft_readdir(data system, char *name, file_flags flags)
         system.node =  new_node();
         system.path = ft_strjoin(name, "/");
         system.path = ft_strjoin(system.path, (system.sd)->d_name);
+        //printf("(system.sd)->d_name = %s\n",(system.sd)->d_name);
         lstat(system.path, &(system.fileStat)); 
         stockage(system.fileStat, &system.node, (system.sd)->d_name);
-        if (flags.flag_t == 1)
-            sort_by_time(&system.node, &system.head);
-        else
-        {
-           // printf("i am in sort by asccoiio \n");
-            sort_by_ascii(&system.node, &system.head);
-        }
+        // printf("i am in sort by asccoiio \n");
+        sort_by_ascii(&system.node, &system.head);
+    }
+    if (flags.flag_t == 1)
+    {
+        sort_by_time(&system.head);
+        //printlist(&system.head,flags);
+
     }
     closedir(system.dir);
     tmp = system.head;
-    if (!flags.flag_r)
-        printlist(&system.head,flags);
-    else
-        reverse_lst(&system.head,flags);
+     if (!flags.flag_r)
+         printlist(&system.head,flags);
+     else
+         reverse_lst(&system.head,flags);
     if (flags.flag_R)
         ft_check_folder(&tmp,name,flags);
     //freelist(&system.head);
@@ -133,39 +67,67 @@ int     ft_get_info(char *name, file_flags flags)
     {
         system.node =  new_node();
         stockage(system.fileStat,&system.node, name);
-        printlist(&system.node,flags);
-        freelist(&system.node);
+        //printnode(&system.node,flags);
+       freelist(&system.node);
     }
     return (0);
+}
+
+int get_argument(t_flist **argument, char *argv,t_flist **head)
+{
+    data system;
+    lstat(argv, &(system.fileStat));
+    stockage(system.fileStat,&(*argument), argv);
+    sort_by_ascii(&(*argument), &(*head));
+    // (*argument)->next = new_node();
+    // (*argument) = (*argument)->next;
+    return 0;
 }
 
 int     main(int argc,char **argv)
 {
     file_flags flags;
     int i = 0;
-    int j = -1;
-    if (flags.flag_a == 0 )
-    {
-            printf("path est null \n");
-    }
-    printf("total %d\n",(l+a));
+    data       system;
+    t_flist *header;
+
+    flags.flag_R = 0;
+    header = NULL;
     printf("\n-\t-\t-\t-\t-\t-\t-\t- \n\n\n");
     printf("argc == %d\n",argc);
-    if (argc == 1)
+    if (argc == 1 || (argc == 2 && argv[1][0] == '-'))
     {
-        flags.flag_l = 1;
-        flags.flag_a = 1;
-        printf("i am herer\n");
+        check_flag(argv[argc-1], &flags);
          ft_get_info(".", flags);
     }
-    while (argv[++i])
+    else
     {
-        check_flag(argv[i], &flags);
-        j = 0;
-        if (!(argv[i][0] == '-'))
+        if (argv[1][0] == '-')
         {
-            ft_get_info(argv[i] , flags);
+            check_flag(argv[1], &flags);
+            i++;
         }
+        // files = new_node();
+        // files = ft_get_info(argv[++i] , flags);
+        
+        
+        //header = system.node;
+        while (argv[++i])
+        {
+            system.node =  new_node();
+            get_argument(&system.node,argv[i],&header);
+        }
+        //printlist(&(header),flags);
+    }
+    while(header != NULL)
+    {
+        if (header->type == 'd')
+        {
+            ft_get_info(header->name,flags);
+        }
+        else
+            printnode(&header,flags,5);
+        header = header->next;
     }
     return (0);
 }
