@@ -51,6 +51,7 @@ typedef struct  filenode
     struct      filenode *next;
     struct      filenode *previous;
     struct      filenode *next_file;
+    struct      filenode *previous_file;
 
 }                t_flist;
 
@@ -78,8 +79,8 @@ int stockage(struct stat fileStat , t_flist **node, char *name);
 void freelist(t_flist **head);
 char   getfiletype(mode_t    mode);
 int check_flag(char *argv, file_flags *flags);
-int     ft_get_info(char *name, file_flags flags);
-void    printlist(t_flist *head,file_flags flags);
+int     ft_get_dir(char *name, file_flags flags);
+void    printlist(t_flist *ptr,file_flags flags,int ptr_move);
 void    printnode(t_flist      *head, file_flags flags,maxlength *max);
 int ft_recursive(char *path, file_flags flags);
 void ft_check_folder(t_flist **lst,char *path, file_flags flags);
@@ -87,8 +88,8 @@ void freelist(t_flist **head);
 t_flist *sort_by_time(t_flist **head);
 t_flist *sort_by_ascii(t_flist **node, t_flist **lst);
 void    swapelement(t_flist **node, t_flist **next);
-void reverse_lst(t_flist      *lst,file_flags flags);
-int    get_lenght(t_flist *head,char type);
+void reverse_lst(t_flist      *lst,file_flags flags,int ptr_move);
+int    get_lenght(t_flist *ptr,char type,int ptr_move);
 int stockage(struct stat fileStat , t_flist **node, char *name);
 int ft_readdir(data system, char *name, file_flags flags);
 

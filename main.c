@@ -12,7 +12,7 @@
 
 #include "ls.h"
 
-int     ft_get_info(char *name, file_flags flags)
+int     ft_get_dir(char *name, file_flags flags)
 {
     data       system;
     
@@ -27,13 +27,6 @@ int     ft_get_info(char *name, file_flags flags)
         }
         ft_readdir(system, name, flags);
     }
-    else
-    {
-        system.node =  new_node();
-        stockage(system.fileStat,&system.node, name);
-        //printnode(&system.node,flags);
-       freelist(&system.node);
-    }
     return (0);
 }
 
@@ -46,11 +39,12 @@ int get_argument(t_flist **argument, char *argv,t_flist **head)
     return 0;
 }
 
-void    get_files(t_flist *ptr)
+void    get_files(t_flist *ptr,file_flags flags)
 {
     t_flist *head;
     t_flist *cur;
 
+    head = NULL;
     while(ptr != NULL)
     {
         if (ptr->type != 'd')
@@ -59,35 +53,43 @@ void    get_files(t_flist *ptr)
             {
                 head = ptr;
                 cur = ptr;
+                cur->previous_file = NULL;
             }
             else
             {
-                
-
-
+                cur->next_file = ptr;
+                cur->next_file->previous_file = cur;
+                cur = cur->next_file;
             }
-            head = ptr;
-            head->previous =  NULL;
-            break;
         }
         ptr = ptr->next;
     }
-
+    if (!head)
+        return;
+    flags.flag_a = 1;
+    if (flags.flag_t)
+        sort_by_time(&head);
+    if (!flags.flag_r)
+         printlist(head,flags,2);
+     else
+         reverse_lst(head,flags,2);
 }
 
 int     main(int argc,char **argv)
 {
+    int i;
     file_flags flags;
-    int i = 0;
     data       system;
     t_flist *header;
 
+    i = 0;
     flags.flag_R = 0;
     header = NULL;
     if (argc == 1 || (argc == 2 && argv[1][0] == '-'))
     {
-        check_flag(argv[argc-1], &flags);
-         ft_get_info(".", flags);
+        if (check_flag(argv[argc-1], &flags) == 1)
+            return (0);
+        ft_get_dir(".", flags);
     }
     else
     {
@@ -102,15 +104,11 @@ int     main(int argc,char **argv)
             get_argument(&system.node,argv[i],&header);
         }
     }
-    get_files(header);
+    get_files(header,flags);
     while(header != NULL)
     {
         if (header->type == 'd')
-        {
-            ft_get_info(header->name,flags);
-        }
-        //else
-            //printnode(&header,flags,5);
+            ft_get_dir(header->name,flags);
         header = header->next;
     }
     return (0);

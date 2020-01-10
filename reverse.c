@@ -13,23 +13,32 @@ void freelist(t_flist **head)
     }
 }
 
-void reverse_lst(t_flist      *lst,file_flags flags)
+void reverse_lst(t_flist      *lst,file_flags flags,int ptr_move)
 {
     t_flist *ptr;
     maxlength max;
 
     ptr = lst;
-    max.link_length = get_lenght(ptr,'l');
-    max.user_length = get_lenght(ptr,'u');
-    max.groupe_length = get_lenght(ptr,'g');
-    max.size_length = get_lenght(ptr,'s');
+    max.link_length = get_lenght(ptr,'l',ptr_move);
+    max.user_length = get_lenght(ptr,'u',ptr_move);
+    max.groupe_length = get_lenght(ptr,'g',ptr_move);
+    max.size_length = get_lenght(ptr,'s',ptr_move);
     while ((ptr)->next != NULL)
-        (ptr)=(ptr)->next;
+    {
+        if (ptr_move == 1)
+            ptr = ptr->next;
+        else
+            ptr = ptr->next_file;
+    }
     while((ptr) != NULL)
     {
         if ((!flags.flag_a && (ptr)->name[0] != '.') || (flags.flag_a))
             printnode(ptr,flags,&max);
-        (ptr)=(ptr)->previous;
+        if (ptr_move == 1)
+           ptr =ptr->previous;
+        else
+            ptr = ptr->previous_file;
+        
     }
     ft_putchar('\n');
 }

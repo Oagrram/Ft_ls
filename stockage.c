@@ -90,9 +90,9 @@ int ft_readdir(data system, char *name, file_flags flags)
     closedir(system.dir);
     tmp = system.head;
      if (!flags.flag_r)
-         printlist(system.head,flags);
+         printlist(system.head,flags,1);
      else
-         reverse_lst(system.head,flags);
+         reverse_lst(system.head,flags,1);
     if (flags.flag_R)
         ft_check_folder(&tmp,name,flags);
     //freelist(&system.head);

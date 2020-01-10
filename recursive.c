@@ -31,6 +31,6 @@ void ft_check_folder(t_flist **lst,char *path, file_flags flags)
 
 int ft_recursive(char *path, file_flags flags)
 {
-    ft_get_info(path,flags);
+    ft_get_dir(path,flags);
     return (0);
 }
