@@ -39,40 +39,48 @@ int get_argument(t_flist **argument, char *argv,t_flist **head)
     return 0;
 }
 
-void    get_files(t_flist *ptr,file_flags flags)
+void    get_files(t_flist **ptr,file_flags flags)
 {
     t_flist *head;
     t_flist *cur;
+    t_flist *tmp;
 
     head = NULL;
-    while(ptr != NULL)
+    if (flags.flag_t)
     {
-        if (ptr->type != 'd')
+        printf("head in sort by time <%s>\n",(*ptr)->name);
+        printf("-------------------aftersort---------------------------\n");
+        sort_by_time(&(*ptr));
+        printlist((*ptr),flags,1);
+        tmp = (*ptr);
+    }
+    while((*ptr) != NULL)
+    {
+        if ((*ptr)->type != 'd')
         {
             if (!head)
             {
-                head = ptr;
-                cur = ptr;
+                head = (*ptr);
+                cur = (*ptr);
                 cur->previous_file = NULL;
             }
             else
             {
-                cur->next_file = ptr;
+                cur->next_file = (*ptr);
                 cur->next_file->previous_file = cur;
                 cur = cur->next_file;
             }
         }
-        ptr = ptr->next;
+        (*ptr) = (*ptr)->next;
     }
-    if (!head)
+    if (!head)                                                          
         return;
     flags.flag_a = 1;
-    if (flags.flag_t)
-        sort_by_time(&head);
     if (!flags.flag_r)
-         printlist(head,flags,2);
+        printlist(head,flags,2);
      else
-         reverse_lst(head,flags,2);
+        reverse_lst(head,flags,2);
+        (*ptr) = tmp;
 }
 
 int     main(int argc,char **argv)
@@ -82,34 +90,74 @@ int     main(int argc,char **argv)
     data       system;
     t_flist *header;
 
-    i = 0;
+    i =0;
     flags.flag_R = 0;
     header = NULL;
-    if (argc == 1 || (argc == 2 && argv[1][0] == '-'))
-    {
-        if (check_flag(argv[argc-1], &flags) == 1)
+    printf("argc = %d\n",argc);
+    while(argv[++i] && argv[i][0] == '-' && argv[i][1])
+        if (check_flag(argv[i],&flags))
             return (0);
+    if(!argv[i])
         ft_get_dir(".", flags);
-    }
     else
     {
-        if (argv[1][0] == '-')
+        while(argv[i])
         {
-            check_flag(argv[1], &flags);
-            i++;
-        }
-        while(argv[++i])
-        {
+            printf("argv[%d] == %s\n",i,argv[i]);
             system.node =  new_node();
             get_argument(&system.node,argv[i],&header);
+            i++;
         }
-    }
-    get_files(header,flags);
-    while(header != NULL)
-    {
-        if (header->type == 'd')
-            ft_get_dir(header->name,flags);
-        header = header->next;
+        printlist(header,flags,1);
+        printf("----------------------------------------------\n");
+        get_files(&header,flags);
+        printf("-------------------afteerall---------------------------\n");
+        printlist(header,flags,1);
+        if (flags.flag_r == 1)
+        {
+            while(header->next != NULL)
+            header = header->next;
+        }
+        while(header != NULL)
+        {
+            if (header->type == 'd')
+                ft_get_dir(header->name,flags);
+            if (!flags.flag_r)
+                header = header->next;
+            else
+                header = header->previous;
+        }
     }
     return (0);
 }
+
+
+
+//     if (argc == 1 || (argc == 2 && argv[1][0] == '-'))
+//     {
+//         if (check_flag(argv[argc-1], &flags) == 1)
+//             return (0);
+//         ft_get_dir(".", flags);
+//     }
+//     else
+//     {
+//         if (argv[1][0] == '-')
+//         {
+//             check_flag(argv[1], &flags);
+//             i++;
+//         }
+//         while(argv[++i])
+//         {
+//             system.node =  new_node();
+//             get_argument(&system.node,argv[i],&header);
+//         }
+//     }
+//     get_files(header,flags);
+//     while(header != NULL)
+//     {
+//         if (header->type == 'd')
+//             ft_get_dir(header->name,flags);
+//         header = header->next;
+//     }
+//     return (0);
+// }

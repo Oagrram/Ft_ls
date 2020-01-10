@@ -4,8 +4,8 @@ int check_flag(char *argv, file_flags *flags)
 {
     int j;
 
-    j = -1;
-    while(argv[++j])
+    j = 0;
+    while(argv[++j] != '\0')
     {
         if (argv[0] == '-' && j != 0 && argv[j] != 'l' && argv[j] != 'a' &&
          argv[j] != 'r' && argv[j] != 'R' && argv[j] != 't')
@@ -15,7 +15,6 @@ int check_flag(char *argv, file_flags *flags)
         }
         else
         {
-            printf("i am checking flag == %c\n",argv[j]);
             if (argv[j] == 'l')
                 flags->flag_l = 1;
             if (argv[j] == 'a')
