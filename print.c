@@ -1,116 +1,106 @@
 
 #include "ls.h"
 
-void    getmaxint(t_flist **head,int *maxnlink)
+void    getmaxint(t_flist *head,int *maxnlink,char type)
 {
-    t_flist *ptr;
     int tmp;
-    int count = 0;
-    ptr = *head;
-    *maxnlink = 0; 
-    //while(ptr)
-    //{
-        tmp = ptr->nlink;
+    int count;
+
+    count = 0;
+    if (type == 'l' || type == 's')
+    {
+        if(type == 'l')
+            tmp = head->nlink;
+        else
+            tmp = head->size;
         while (tmp != 0)
         {
             tmp/= 10;
             ++count;
         }
-        *maxnlink = count;
-        
-       // ptr = ptr->next;
-    //}
-}
-
-void    printlist(t_flist **head,file_flags flags)
-{
-    t_flist *tmp;
-    t_flist *tmp2;
-    int maxlink = 0;
-    tmp = *head;
-    tmp2 = tmp;
-    
-    //getmaxint(head, &maxlink);
-    //printf("maxnlink == %d\n",maxlink);
-    while ((tmp) != NULL)
-    {
-        if ((!flags.flag_a && (tmp)->name[0] != '.') || (flags.flag_a))
-            printnode(&(tmp), flags,maxlink);
-        //printf("\n");
-        (tmp) = (tmp)->next;
-        //if (tmp)
-        //ft_memdel((void**)&tmp->previous);
-    }
-    ft_putchar('\n');
-    freelist(&(tmp));
-}
-
-void reverse_lst(t_flist      **lst,file_flags flags)
-{
-    t_flist *ptr;
-
-    ptr = *lst;
-    while ((ptr)->next != NULL)
-    {
-        (ptr)=(ptr)->next;
-    }
-    while((ptr) != NULL)
-    {
-        if ((!flags.flag_a && (ptr)->name[0] != '.') || (flags.flag_a))
-           // printnode(&ptr,flags);
-        //rintf(" <%s> \n",(ptr)->name);
-        (ptr)=(ptr)->previous;
-    }
-    
-    ft_putchar('\n');
-}
-
-void    printnode(t_flist      **head, file_flags flags, int maxlink)
-{
-    if (!flags.flag_l)
-    {
-        ft_putstr((*head)->name);
-        ft_putchar(' ');
-        return;
     }
     else
     {
-        getmaxint(head, &maxlink);
-        maxlink = 4 -  maxlink;
-       // printf("maxlin ==== %d\n",maxlink);
-        ft_putchar((*head)->type);
-        ft_putstr((*head)->permision);
-        
-        
-        while (maxlink )
-        {
-            ft_putchar(' ');
-            maxlink--;
-        }
-        //ft_putstr("  ");
-        ft_putnbr((*head)->nlink);
-        ft_putchar(' ');
-        ft_putstr((*head)->user);
-        ft_putchar(9);
-        ft_putstr((*head)->groupe);
-        ft_putchar(9);
-        ft_putnbr((*head)->size);
-        ft_putchar(9);
-        ft_putstr((*head)->time);
-        ft_putchar(9);
-        ft_putstr((*head)->name);
-        ft_putchar('\n');
+        if (type == 'u')
+            count = ft_strlen(head->user);
+        else
+            count = ft_strlen(head->groupe);
+    }
+    if(count > *maxnlink)
+    {
+        *maxnlink = count;
     }
 }
 
-void freelist(t_flist **head)
+int    get_lenght(t_flist *head,char type)
 {
-   t_flist *tmp;
+    int max;
 
-   while (*head != NULL)
+    max = 0;
+    while(head)
     {
-       tmp = *head;
-       *head = (*head)->next;
-       ft_memdel((void**)&(tmp));
+        getmaxint(head, &max,type);
+        head = head->next;
+    }
+    return (max);
+}
+
+void    printlist(t_flist *head,file_flags flags)
+{
+    maxlength max;
+
+    max.link_length = get_lenght(head,'l');
+    max.user_length = get_lenght(head,'u');
+    max.groupe_length = get_lenght(head,'g');
+    max.size_length = get_lenght(head,'s');
+    while ((head) != NULL)
+    {
+        if ((!flags.flag_a && (head)->name[0] != '.') || (flags.flag_a))
+            printnode(head, flags,&max);
+        (head) = (head)->next;
+    }
+    ft_putchar('\n');
+    freelist(&(head));
+}
+
+void    print_spaces(t_flist *head, int *tmplength,char type,int max,int spaceadd)
+{
+    *tmplength = 0;
+    getmaxint(head,tmplength,type);
+    if (*tmplength == 0)
+        *tmplength = 1;
+    *tmplength = (max - (*tmplength)) + spaceadd;
+    while ((*tmplength)-- != 0)
+        ft_putchar(' ');
+}
+
+void    printnode(t_flist      *head, file_flags flags,maxlength *max)
+{
+    int tmplength;
+
+    if (!flags.flag_l)
+    {
+        ft_putstr(head->name);
+        ft_putchar(' ');
+    }
+    else
+    {
+        ft_putchar(head->type);
+        ft_putstr(head->permision);
+        ft_putstr("  ");
+        print_spaces(head,&tmplength,'l',max->link_length,0);
+        ft_putnbr(head->nlink);
+        ft_putchar(' ');
+        ft_putstr(head->user);
+        print_spaces(head,&tmplength,'u',max->user_length,2);
+        ft_putstr(head->groupe);
+        print_spaces(head,&tmplength,'g',max->groupe_length,2);
+        print_spaces(head,&tmplength,'s',max->size_length,0);
+        ft_putnbr(head->size);
+        ft_putchar(' ');
+        ft_putstr(head->time);
+        ft_putchar(' ');
+        ft_putstr(head->name);
+        ft_putchar('\n');
     }
 }

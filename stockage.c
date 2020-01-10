@@ -69,3 +69,32 @@ int stockage(struct stat fileStat , t_flist **node, char *name)
     getpermition(fileStat,&(*node));
     return (0);
 }
+
+int ft_readdir(data system, char *name, file_flags flags)
+{
+    t_flist *tmp;
+
+    system.head = NULL;
+    while((system.sd = readdir(system.dir)) != NULL)
+    {
+        system.node =  new_node();
+        system.path = ft_strjoin(name, "/");
+        system.path = ft_strjoin(system.path, (system.sd)->d_name);
+
+        lstat(system.path, &(system.fileStat)); 
+        stockage(system.fileStat, &system.node, (system.sd)->d_name);
+        sort_by_ascii(&system.node, &system.head);
+    }
+    if (flags.flag_t == 1)
+        sort_by_time(&system.head);
+    closedir(system.dir);
+    tmp = system.head;
+     if (!flags.flag_r)
+         printlist(system.head,flags);
+     else
+         reverse_lst(system.head,flags);
+    if (flags.flag_R)
+        ft_check_folder(&tmp,name,flags);
+    //freelist(&system.head);
+    return (0);
+}
