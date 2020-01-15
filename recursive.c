@@ -1,36 +1,119 @@
 
 #include "ls.h"
 
-void ft_check_folder(t_flist **lst,char *path, file_flags flags)
-{
-    char *tmp;
-    t_flist *ptr;
 
-    ptr = (*lst);
-   if (flags.flag_r)
-   {
-       while ((ptr)->next != NULL)
-        (ptr)=(ptr)->next;
-   }
-    while ((ptr) != NULL)
-    {
-        if ((ptr)->type == 'd' && ft_strcmp((ptr)->name, ".") != 0 && ft_strcmp((ptr)->name, "..") != 0
-        && ((!flags.flag_a && (ptr)->name[0] != '.') || (flags.flag_a)))
-        {
-            tmp = ft_strjoin(path,"/");
-            tmp = ft_strjoin(tmp,(ptr)->name);
-            printf("%s\n\n",tmp);
-             ft_recursive(tmp, flags);
-        }
-        if (flags.flag_r)
-            (ptr)=(ptr)->previous;
-        else
-            (ptr) = (ptr)->next;
-    }
+// void ft_check_folder(t_flist **lst,char *path, file_flags flags)
+// {
+//     char *tmp;
+//     t_flist *ptr;
+
+//     ptr = (*lst);
+//    if (flags.flag_r)
+//    {
+//        while ((ptr)->next != NULL)
+//         (ptr)=(ptr)->next;
+//    }
+//     while ((ptr) != NULL)
+//     {
+//         if ((ptr)->type == 'd' && ft_strcmp((ptr)->name, ".") != 0 && ft_strcmp((ptr)->name, "..") != 0
+//         && ((!flags.flag_a && (ptr)->name[0] != '.') || (flags.flag_a)))
+//         {
+//             tmp = ft_strjoin(path,"/");
+//             tmp = ft_strjoin(tmp,(ptr)->name);
+//             printf("%s\n\n",tmp);
+//              ft_recursive(tmp, flags);
+//         }
+//         if (flags.flag_r)
+//             (ptr)=(ptr)->previous;
+//         else
+//             (ptr) = (ptr)->next;
+//     }
+// }
+
+// int ft_recursive(char *path, file_flags flags)
+// {
+//     ft_get_dir(path,flags);
+//     return (0);
+// }
+
+
+
+void ft_check_folder(t_flist *p,char *path, file_flags flags)
+{
+	char *tmp;
+    char *tofree;
+	//t_flist *ptr;
+
+	//ptr = (lst);
+	if (flags.flag_r)
+	{
+		if (p)
+			while ((p)->next != NULL)
+				(p)=(p)->next;
+	}
+	while (p)
+	{
+		if (!p->name)
+			ft_putendl("is null");
+		if (p->type == 'd' && ft_strcmp(p->name, ".") != 0 && ft_strcmp(p->name, "..") != 0
+				&& ((!flags.flag_a && p->name[0] != '.') || (flags.flag_a)))
+		{
+			tmp = ft_strjoin(path,"/");
+            tofree = tmp;
+			tmp = ft_strjoin(tmp,p->name);
+            ft_strdel(&tofree);
+			ft_putstr(tmp);
+			ft_putstr(":\n");
+			ft_recursive(tmp, flags);
+            ft_strdel(&tmp);
+		}
+		if (flags.flag_r)
+			p = p->previous;
+		else
+			p = p->next;
+	}
 }
+
+// static void show_ls_r(t_files *f, char *path, t_options *op)
+// {
+//     char        *path1;
+//     struct stat st;
+//     while (f)
+//     {
+//         path1 = ft_pathjoin(path, f->nom);
+//         if (lstat(path1, &st) != -1)
+//         {
+//             if (S_ISDIR(st.st_mode))
+//             {
+//                 if (ft_strcmp(f->nom, "..") != 0 && ft_strcmp(f->nom, ".") != 0)
+//                 {
+//                     ft_putchar('\n');
+//                     ft_putstr(path1);
+//                     ft_putstr(":\n");
+//                     ls_r(path1, op);
+//                 }
+//             }
+//         }
+//         free(path1);
+//         f = f->next;
+//     }
+// }
+// void        ls_r(char *path, t_options *op)
+// {
+//     t_files     *f;
+//     t_files     *tmp;
+//     if (!(f = solo_ls(path, op)))
+//         return ;
+//     tmp = f;
+//     ft_order(&f, op);
+//     afficher_ls(f, op, 1, path);
+//     show_ls_r(f, path, op);
+//     ft_del_files(&tmp);
+// }
 
 int ft_recursive(char *path, file_flags flags)
 {
-    ft_get_dir(path,flags);
-    return (0);
+	//printf("----------------i am in recurseive  with %s---------------\n",path);
+	ft_get_dir(path,flags);
+	return (0);
 }
