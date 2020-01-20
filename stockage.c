@@ -80,7 +80,6 @@ int stockage(struct stat fileStat , t_flist **node, char *name,char *path)
 		(*node)->maj = major(fileStat.st_rdev);
 		(*node)->min = minor(fileStat.st_rdev);
 	}
-
 	return (0);
 }
 
@@ -103,14 +102,14 @@ int ft_readdir(data system, char *name, file_flags flags)
 		sort_by_ascii(&system.node, &system.head);
         ft_strdel(&system.path);
 	}
-	if (flags.flag_t == 1)
+	if (flags.f_t)
 		sort_by_time(&system.head);
 	closedir(system.dir);
-	if (!flags.flag_r)
+	if (!flags.f_r)
 		printlist(system.head,flags,1);
 	else
 		reverse_lst(system.head,flags,1);
-	if (flags.flag_R)
+	if (flags.f_R)
 		ft_check_folder(system.head,name,flags);
 	freelist(&system.head);
 	return (0);
@@ -144,7 +143,7 @@ int ft_readdir(data system, char *name, file_flags flags)
 //         ft_strdel(&ptr);
 //         if (lstat(system.path, &(system.fileStat)) != -1)
 //         {
-//             if (flags.flag_R && S_ISDIR(system.fileStat.st_mode)
+//             if (flags.f_R && S_ISDIR(system.fileStat.st_mode)
 //             && ft_strcmp(ft_strrchr(system.path, '/') + 1, "..")
 //             && ft_strcmp(ft_strrchr(system.path, '/') + 1, "."))
 //             {
@@ -161,14 +160,14 @@ int ft_readdir(data system, char *name, file_flags flags)
 //     }
 //      system.directories = ft_strsplit(directories, ':');
 //      free(directories);
-//     if (flags.flag_t)
+//     if (flags.f_t)
 //         sort_by_time(&system.head);
 //     closedir(system.dir);
-//     if (!flags.flag_r)
+//     if (!flags.f_r)
 //         printlist(system.head, flags, 1);
 //     else
 //         reverse_lst(system.head, flags, 1);
-//     if (flags.flag_R && system.directories)
+//     if (flags.f_R && system.directories)
 //     {
 //         //  ft_check_folder(&system.head,name,flags);
 //         int i = 0;
@@ -181,18 +180,18 @@ int ft_readdir(data system, char *name, file_flags flags)
 //         free(system.directories);
 //      }
 //     //printf("\n+_+_+_+_+_+__+_+_+_+_+_+_+_+_+_+_+_+_+_+_++\n");
-//     /*if (flags.flag_t == 1)
+//     /*if (flags.f_t == 1)
 //         sort_by_time(&system.head);
 //     printf("here 1\n");
 //     closedir(system.dir);
 //     tmp = system.head;
 //     printf("here 1\n");
-//     if (!flags.flag_r)
+//     if (!flags.f_r)
 //         printlist(system.head,flags,1);
 //     else
 //         reverse_lst(system.head,flags,1);
 //     printf("here 1\n");
-//     if (flags.flag_R)
+//     if (flags.f_R)
 //         ft_check_folder(&system.head,name,flags);
 //     printf("here 1\n");*/
 //     //freelist(&system.head);

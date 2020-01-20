@@ -8,7 +8,7 @@
 //     t_flist *ptr;
 
 //     ptr = (*lst);
-//    if (flags.flag_r)
+//    if (flags.f_r)
 //    {
 //        while ((ptr)->next != NULL)
 //         (ptr)=(ptr)->next;
@@ -16,14 +16,14 @@
 //     while ((ptr) != NULL)
 //     {
 //         if ((ptr)->type == 'd' && ft_strcmp((ptr)->name, ".") != 0 && ft_strcmp((ptr)->name, "..") != 0
-//         && ((!flags.flag_a && (ptr)->name[0] != '.') || (flags.flag_a)))
+//         && ((!flags.f_a && (ptr)->name[0] != '.') || (flags.f_a)))
 //         {
 //             tmp = ft_strjoin(path,"/");
 //             tmp = ft_strjoin(tmp,(ptr)->name);
 //             printf("%s\n\n",tmp);
 //              ft_recursive(tmp, flags);
 //         }
-//         if (flags.flag_r)
+//         if (flags.f_r)
 //             (ptr)=(ptr)->previous;
 //         else
 //             (ptr) = (ptr)->next;
@@ -45,7 +45,7 @@ void ft_check_folder(t_flist *p,char *path, file_flags flags)
 	//t_flist *ptr;
 
 	//ptr = (lst);
-	if (flags.flag_r)
+	if (flags.f_r)
 	{
 		if (p)
 			while ((p)->next != NULL)
@@ -56,7 +56,7 @@ void ft_check_folder(t_flist *p,char *path, file_flags flags)
 		if (!p->name)
 			ft_putendl("is null");
 		if (p->type == 'd' && ft_strcmp(p->name, ".") != 0 && ft_strcmp(p->name, "..") != 0
-				&& ((!flags.flag_a && p->name[0] != '.') || (flags.flag_a)))
+				&& ((!flags.f_a && p->name[0] != '.') || (flags.f_a)))
 		{
 			tmp = ft_strjoin(path,"/");
             tofree = tmp;
@@ -67,7 +67,7 @@ void ft_check_folder(t_flist *p,char *path, file_flags flags)
 			ft_recursive(tmp, flags);
             ft_strdel(&tmp);
 		}
-		if (flags.flag_r)
+		if (flags.f_r)
 			p = p->previous;
 		else
 			p = p->next;

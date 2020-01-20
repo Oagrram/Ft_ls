@@ -20,7 +20,8 @@ void freelist(t_flist **head)
     //         ft_strdel(&tmp->time);
     //         ft_strdel(&tmp->user);
     //         ft_strdel(&tmp->groupe);
-    //         ft_strdel(&tmp->linkedfile);
+    //if (tmp->linkedfile)
+       // ft_strdel(&tmp->linkedfile);
     //         ft_memdel((void**)&tmp->next_file);
     //    }
        ft_memdel((void**)&(tmp));
@@ -34,7 +35,10 @@ void reverse_lst(t_flist      *ptr,file_flags flags,int ptr_move)
     max.link_length = get_lenght(ptr,'l',ptr_move);
     max.user_length = get_lenght(ptr,'u',ptr_move);
     max.groupe_length = get_lenght(ptr,'g',ptr_move);
+    max.maj_length = get_lenght(ptr,'a',ptr_move);
+	max.min_length = get_lenght(ptr,'i',ptr_move);
     max.size_length = get_lenght(ptr,'s',ptr_move);
+    //printf("max of maj == %d \n max of min == %d\nmax of size == %d\n",max.maj_length,max.min_length,max.size_length);
     if (ptr_move == 1)
     {
         while ((ptr)->next != NULL)
@@ -47,7 +51,7 @@ void reverse_lst(t_flist      *ptr,file_flags flags,int ptr_move)
     }
     while((ptr) != NULL)
     {
-        if ((!flags.flag_a && (ptr)->name[0] != '.') || (flags.flag_a))
+        if ((!flags.f_a && (ptr)->name[0] != '.') || (flags.f_a))
             printnode(ptr,flags,&max);
         if (ptr_move == 1)
            ptr = ptr->previous;

@@ -30,11 +30,12 @@
 
 typedef struct  flag
 {
-    int         flag_l;
-    int         flag_a;
-    int         flag_r;
-    int         flag_t;
-    int         flag_R;
+    int         f_l;
+    int         f_a;
+    int         f_r;
+    int         f_t;
+    int         f_R;
+    int         f_g;
 }           file_flags;
 
 

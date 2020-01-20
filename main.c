@@ -40,6 +40,7 @@ int get_argument(t_flist **argument, char *argv,t_flist **head)
 	return 0;
 }
 
+
 void    get_files(t_flist **ptr,file_flags flags)
 {
 	t_flist *head;
@@ -48,7 +49,7 @@ void    get_files(t_flist **ptr,file_flags flags)
 
 	head = NULL;
 	tmp = (*ptr);
-	if (flags.flag_t)
+	if (flags.f_t)
 	{
 		sort_by_time(&(*ptr));
 		tmp = (*ptr);
@@ -77,8 +78,8 @@ void    get_files(t_flist **ptr,file_flags flags)
 		*ptr = tmp;
 		return;
 	}
-	flags.flag_a = 1;
-	if (!flags.flag_r)
+	flags.f_a = 1;
+	if (!flags.f_r)
 		printlist(head,flags,2);
 	else
 		reverse_lst(head,flags,2);
@@ -93,7 +94,7 @@ int     main(int argc,char **argv)
 	t_flist *header;
 
 	i =0;
-	flags.flag_R = 0;
+	flags.f_R = 0;
 	header = NULL;
 	printf("argc = %d\n",argc);
 	while(argv[++i] && argv[i][0] == '-' && argv[i][1])
@@ -111,7 +112,7 @@ int     main(int argc,char **argv)
 			i++;
 		}
 		get_files(&header,flags);
-		if (flags.flag_r == 1)
+		if (flags.f_r == 1)
 		{
 			while(header->next != NULL)
 				header = header->next;
@@ -120,7 +121,7 @@ int     main(int argc,char **argv)
 		{
 			if (header->type == 'd')
 				ft_get_dir(header->name,flags);
-			if (!flags.flag_r)
+			if (!flags.f_r)
 				header = header->next;
 			else
 				header = header->previous;

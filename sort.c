@@ -1,32 +1,29 @@
 #include "ls.h"
 
-void    swap_rest(t_flist **newnode, t_flist **ptr)
+void    swap_rest(t_flist **newnode, t_flist **ptr,t_flist **tmp)
 {
-	t_flist *tmp;
+	//t_flist *tmp;
 
-	tmp = new_node();
-	tmp->nlink = (*newnode)->nlink;
+	//(*tmp) = new_node();
+	(*tmp)->nlink = (*newnode)->nlink;
 	(*newnode)->nlink = (*ptr)->nlink;
-	(*ptr)->nlink = tmp->nlink;
-	tmp->user = (*newnode)->user;
+	(*ptr)->nlink = (*tmp)->nlink;
+	(*tmp)->user = (*newnode)->user;
 	(*newnode)->user = (*ptr)->user;
-	(*ptr)->user = tmp->user;
-	tmp->groupe = (*newnode)->groupe;
+	(*ptr)->user = (*tmp)->user;
+	(*tmp)->groupe = (*newnode)->groupe;
 	(*newnode)->groupe = (*ptr)->groupe;
-	(*ptr)->groupe = tmp->groupe;
-	tmp->size = (*newnode)->size;
-	(*newnode)->size = (*ptr)->size;  
-	(*ptr)->size = tmp->size;
-	tmp->time = (*newnode)->time;
+	(*ptr)->groupe = (*tmp)->groupe;
+	(*tmp)->time = (*newnode)->time;
 	(*newnode)->time = (*ptr)->time;
-	(*ptr)->time = tmp->time;
-	tmp->name = (*newnode)->name;
+	(*ptr)->time = (*tmp)->time;
+	(*tmp)->name = (*newnode)->name;
 	(*newnode)->name = (*ptr)->name;
-	(*ptr)->name = tmp->name;
-	tmp->mtime = (*newnode)->mtime;
+	(*ptr)->name = (*tmp)->name;
+	(*tmp)->mtime = (*newnode)->mtime;
 	(*newnode)->mtime = (*ptr)->mtime;
-	(*ptr)->mtime = tmp->mtime;
-	free(tmp);
+	(*ptr)->mtime = (*tmp)->mtime;
+	free((*tmp));
 }
 
 int    *swap_content(t_flist **newnode, t_flist **ptr)
@@ -35,9 +32,59 @@ int    *swap_content(t_flist **newnode, t_flist **ptr)
 	file_flags flags;
 	int i;
 
-	flags.flag_l = 1;
+	flags.f_l = 1;
 	i = 0;
 	tmp = new_node();
+	if (((*newnode)->type == 'b' || (*newnode)->type == 'c') && ((*ptr)->type == 'b' || (*ptr)->type == 'c'))
+	{
+		tmp->maj = (*newnode)->maj;
+		(*newnode)->maj = (*ptr)->maj; 
+		(*ptr)->maj = tmp->maj;
+		tmp->min = (*newnode)->min;
+		(*newnode)->min = (*ptr)->min; 
+		(*ptr)->min = tmp->min;
+	}
+	else if (((*newnode)->type != 'b' || (*newnode)->type != 'c') && ((*ptr)->type != 'b' || (*ptr)->type != 'c'))
+	{
+		tmp->size = (*newnode)->size;
+		(*newnode)->size = (*ptr)->size;  
+		(*ptr)->size = tmp->size;
+	}
+	else
+	{
+		if ((*newnode)->type == 'b' || (*newnode)->type == 'c')
+		{
+			tmp->maj = (*newnode)->maj;
+			tmp->min = (*newnode)->min;
+			(*newnode)->maj = 0;
+			(*newnode)->min = 0;
+			(*ptr)->maj = tmp->maj;
+			(*ptr)->min = tmp->min;
+			(*newnode)->size = (*ptr)->size; 
+		}
+	}
+	if ((*newnode)->type == 'l' && ((*ptr)->type == 'l'))
+	{
+		tmp->linkedfile = (*newnode)->linkedfile;
+		(*newnode)->linkedfile = (*ptr)->linkedfile; 
+		(*ptr)->linkedfile = tmp->linkedfile;
+	}
+	else if ((*newnode)->type == 'l' || ((*ptr)->type == 'l'))
+	{
+		if ((*newnode)->type == 'l')
+		{
+			tmp->linkedfile = (*newnode)->linkedfile;
+			//free(&(*newnode)->linkedfile);
+			(*ptr)->linkedfile = tmp->linkedfile;
+		}
+		else if ((*ptr)->type == 'l')
+		{
+			tmp->linkedfile = (*ptr)->linkedfile;
+			//free(&(*ptr)->linkedfile);
+			(*newnode)->linkedfile = tmp->linkedfile;
+		}
+		
+	}
 	tmp->type = (*newnode)->type;
 	(*newnode)->type = (*ptr)->type;
 	(*ptr)->type = tmp->type;
@@ -47,8 +94,8 @@ int    *swap_content(t_flist **newnode, t_flist **ptr)
 		(*newnode)->permision[i] = (*ptr)->permision[i];
 		(*ptr)->permision[i] = tmp->permision[i];
 	}
-	free(tmp);
-	swap_rest(newnode, ptr);
+	//free(tmp);
+	swap_rest(newnode, ptr,&(tmp));
 	return (0);
 }
 
