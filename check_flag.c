@@ -10,7 +10,12 @@ int check_flag(char *argv, file_flags *flags)
 		if (argv[0] == '-' && j != 0 && argv[j] != 'l' && argv[j] != 'a' &&
 				argv[j] != 'r' && argv[j] != 'R' && argv[j] != 't' && argv[j] != 'g')
 		{
-			printf("ls: illegal option\n");
+			//printf("ls: illegal option\n");
+			//printf("ft_ls: illegal option -- %c\n", argv[j]);
+			ft_putstr("ft_ls: illegal option -- ");
+			ft_putchar(argv[j]);
+			ft_putendl("");
+			ft_putendl("usage: ls [-alrRtg] [file ...]");
 			return (1);
 		}
 		else

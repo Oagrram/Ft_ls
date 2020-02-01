@@ -1,7 +1,7 @@
-
+ 
 #include "ls.h"
 
-void    getmaxint(t_flist *ptr,int *maxnlink,char type)
+void	getmaxint(t_flist *ptr, int *maxnlink, char type)
 {
 	int tmp;
 	int count;
@@ -19,7 +19,7 @@ void    getmaxint(t_flist *ptr,int *maxnlink,char type)
 			tmp = ptr->min;
 		while (tmp != 0)
 		{
-			tmp/= 10;
+			tmp /= 10;
 			++count;
 		}
 	}
@@ -30,24 +30,24 @@ void    getmaxint(t_flist *ptr,int *maxnlink,char type)
 		else
 			count = ft_strlen(ptr->groupe);
 	}
-	if(count > *maxnlink)
+	if (count > *maxnlink)
 		*maxnlink = count;
 }
 
-int    get_lenght(t_flist *ptr,char type,int ptr_move)
+int		get_lenght(t_flist *ptr, char type, int ptr_move)
 {
 	int max;
 
 	max = 0;
-	while(ptr)
+	while (ptr)
 	{
 		if (type == 'a' || type == 'i')
 		{
 			if(ptr->type == 'c' || ptr->type == 'b')
-				getmaxint(ptr, &max,type);
+				getmaxint(ptr, &max, type);
 		}
 		else
-			getmaxint(ptr, &max,type);
+			getmaxint(ptr, &max, type);
 		if (ptr_move == 1)
 			ptr = ptr->next;
 		else
@@ -57,24 +57,56 @@ int    get_lenght(t_flist *ptr,char type,int ptr_move)
 	return (max);
 }
 
-void    printlist(t_flist *ptr,file_flags flags,int ptr_move)
+void    printlist(t_flist *ptr, file_flags flags, int ptr_move)
 {
 	maxlength max;
 	t_flist *free;
+	//char *tmplink;
+	//int tmp;
+	// data system;
 
-	//printf("i am in printlist\n");
 	free = ptr;
-	max.link_length = get_lenght(ptr,'l',ptr_move);
-	max.user_length = get_lenght(ptr,'u',ptr_move);
-	max.groupe_length = get_lenght(ptr,'g',ptr_move);
-	max.maj_length = get_lenght(ptr,'a',ptr_move);
-	max.min_length = get_lenght(ptr,'i',ptr_move);
-	max.size_length = get_lenght(ptr,'s',ptr_move);
-	//printf("max of maj == %d \n max of min == %d\n",max.maj_length,max.min_length);
+	max.link_length = get_lenght(ptr, 'l', ptr_move);
+	max.user_length = get_lenght(ptr, 'u', ptr_move);
+	max.groupe_length = get_lenght(ptr, 'g', ptr_move);
+	max.maj_length = get_lenght(ptr, 'a', ptr_move);
+	max.min_length = get_lenght(ptr, 'i', ptr_move);
+	max.size_length = get_lenght(ptr, 's', ptr_move);
+	printf("ptr_move == %d\n",ptr_move);
 	while ((ptr) != NULL)
 	{
 		if ((!flags.f_a && (ptr)->name[0] != '.') || (flags.f_a))
-			printnode(ptr, flags,&max);
+		{
+			// if (ptr->type == 'l' && (ptr_move == 2 && !flags.f_l))
+			// {
+			// 	ft_putendl("its dir");
+			// 	tmplink = ft_strjoin(ptr->name,"/");
+			// 	printf("tmplink == %s\n",tmplink);
+			// 	if (S_ISDIR(system.fileStat.st_mode))
+			// 	{
+			// 		ft_get_dir(tmplink, flags);
+			// 	}
+			// 	//else
+			// 		//printnode(ptr, flags, &max);
+			// 	else
+			// 	{
+			// 		printf("ERROR\n");
+			// 	}
+			// }
+			// else
+			//if ((ptr->type == 'l' && ptr_move == 2 && !flags.f_l))
+			///	ft_putstr("");
+			// else
+			if ((ptr->type == 'l' && ptr_move == 2 && !flags.f_l))
+			{
+				if (get_link(ptr->name) == 2)
+					ft_get_dir(ptr->name, flags);
+				else
+					printnode(ptr, flags, &max);
+			}
+			else
+				printnode(ptr, flags, &max);
+		}
 		if (ptr_move == 1)
 			ptr = ptr->next;
 		else
@@ -83,9 +115,10 @@ void    printlist(t_flist *ptr,file_flags flags,int ptr_move)
 	ft_putchar('\n');
 }
 
-void    print_spaces(t_flist *ptr, int *tmplength,char type,int max,int spaceadd)
+void	print_spaces(t_flist *ptr, int *tmplength, char type, int max, int spaceadd)
 {
 	int i = 0;
+
 	*tmplength = 0;
 	getmaxint(ptr,tmplength,type);
 	if (*tmplength == 0)
@@ -108,7 +141,7 @@ void    print_spaces(t_flist *ptr, int *tmplength,char type,int max,int spaceadd
 
 void    printnode(t_flist *ptr, file_flags flags,maxlength *max)
 {
-	int tmplength;
+	int tmp;
 
 	if (!flags.f_l)
 	{
@@ -120,32 +153,32 @@ void    printnode(t_flist *ptr, file_flags flags,maxlength *max)
 		ft_putchar(ptr->type);
 		ft_putstr(ptr->permision);
 		ft_putstr("  ");
-		print_spaces(ptr,&tmplength,'l',max->link_length,0);
+		print_spaces(ptr, &tmp,'l', max->link_length, 0);
 		ft_putnbr(ptr->nlink);
 		ft_putchar(' ');
 		if (!flags.f_g)
 		{
 			ft_putstr(ptr->user);
-			print_spaces(ptr,&tmplength,'u',max->user_length,2);
-		}	
+			print_spaces(ptr, &tmp,'u', max->user_length, 2);
+		}
 		ft_putstr(ptr->groupe);
-		print_spaces(ptr,&tmplength,'g',max->groupe_length,2);
+		print_spaces(ptr, &tmp,'g', max->groupe_length,2);
 		//if (ptr->type != 'c' && ptr->type != 'b')
-			//print_spaces(ptr,&tmplength,'s',max->size_length,0);
+			//print_spaces(ptr,&tmp,'s',max->size_length,0);
 		if ((ptr->type != 'c' && ptr->type != 'b'))
 		{
 			if (max->maj_length)
-				print_spaces(ptr,&tmplength,'s',max->size_length,max->min_length);
+				print_spaces(ptr, &tmp, 's', max->size_length, max->min_length);
 			else
-				print_spaces(ptr,&tmplength,'s',max->size_length,0);
+				print_spaces(ptr, &tmp, 's', max->size_length, 0);
 			ft_putnbr(ptr->size);
 		}
 		else
 		{
-			print_spaces(ptr,&tmplength,'a',max->maj_length,0);
+			print_spaces(ptr, &tmp, 'a', max->maj_length, 0);
 			ft_putnbr((ptr)->maj);
 			ft_putstr(", ");
-			print_spaces(ptr,&tmplength,'i',max->min_length,0);
+			print_spaces(ptr, &tmp, 'i', max->min_length, 0);
 			ft_putnbr((ptr)->min);
 		}
 		ft_putchar(' ');
@@ -154,7 +187,7 @@ void    printnode(t_flist *ptr, file_flags flags,maxlength *max)
 		ft_putstr(ptr->name);
 		if (ptr->linkedfile && ptr->type == 'l')
 		{
-			ft_putstr (" -> ");
+			ft_putstr(" -> ");
 			ft_putstr(ptr->linkedfile);
 			ft_strdel(&ptr->linkedfile);
 		}

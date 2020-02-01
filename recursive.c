@@ -58,14 +58,22 @@ void ft_check_folder(t_flist *p,char *path, file_flags flags)
 		if (p->type == 'd' && ft_strcmp(p->name, ".") != 0 && ft_strcmp(p->name, "..") != 0
 				&& ((!flags.f_a && p->name[0] != '.') || (flags.f_a)))
 		{
-			tmp = ft_strjoin(path,"/");
-            tofree = tmp;
-			tmp = ft_strjoin(tmp,p->name);
-            ft_strdel(&tofree);
+			if (ft_strcmp(path,"/") == 0)
+			{
+				tmp = path;
+				tmp = ft_strjoin(tmp, p->name);
+			}
+			else
+			{
+				tmp = ft_strjoin(path, "/");
+				tofree = tmp;
+				tmp = ft_strjoin(tmp, p->name);
+				ft_strdel(&tofree);
+			}
 			ft_putstr(tmp);
 			ft_putstr(":\n");
 			ft_recursive(tmp, flags);
-            ft_strdel(&tmp);
+			ft_strdel(&tmp);
 		}
 		if (flags.f_r)
 			p = p->previous;
