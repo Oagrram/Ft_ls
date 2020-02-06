@@ -1,6 +1,6 @@
 #include "ls.h"
 
-void    swap_rest(t_flist **newnode, t_flist **ptr,t_flist **tmp)
+void		swap_rest(t_flist **newnode, t_flist **ptr,t_flist **tmp)
 {
 	//t_flist *tmp;
 
@@ -26,14 +26,14 @@ void    swap_rest(t_flist **newnode, t_flist **ptr,t_flist **tmp)
 	free((*tmp));
 }
 
-int    *swap_content(t_flist **newnode, t_flist **ptr)
+int		*swap_content(t_flist **newnode, t_flist **ptr)
 {
 	t_flist *tmp;
 	file_flags flags;
 	int i;
 
 	flags.f_l = 1;
-	i = 0;
+	i = -1;
 	tmp = new_node();
 	if (((*newnode)->type == 'b' || (*newnode)->type == 'c') && ((*ptr)->type == 'b' || (*ptr)->type == 'c'))
 	{
@@ -47,7 +47,7 @@ int    *swap_content(t_flist **newnode, t_flist **ptr)
 	else if (((*newnode)->type != 'b' || (*newnode)->type != 'c') && ((*ptr)->type != 'b' || (*ptr)->type != 'c'))
 	{
 		tmp->size = (*newnode)->size;
-		(*newnode)->size = (*ptr)->size;  
+		(*newnode)->size = (*ptr)->size;
 		(*ptr)->size = tmp->size;
 	}
 	else
@@ -88,7 +88,7 @@ int    *swap_content(t_flist **newnode, t_flist **ptr)
 	tmp->type = (*newnode)->type;
 	(*newnode)->type = (*ptr)->type;
 	(*ptr)->type = tmp->type;
-	while(i++ < 11)
+	while(++i < 11)
 	{
 		tmp->permision[i] = (*newnode)->permision[i];
 		(*newnode)->permision[i] = (*ptr)->permision[i];
@@ -99,7 +99,7 @@ int    *swap_content(t_flist **newnode, t_flist **ptr)
 	return (0);
 }
 
-t_flist *sort_by_time(t_flist **head)
+t_flist		*sort_by_time(t_flist **head)
 {
 
 	t_flist *ptr;
@@ -120,9 +120,7 @@ t_flist *sort_by_time(t_flist **head)
 	return (*head);
 }
 
-
-
-t_flist *sort_by_ascii(t_flist **node, t_flist **lst)
+t_flist		*sort_by_ascii(t_flist **node, t_flist **lst)
 {
 	t_flist *ptr;
 	t_flist *tmp;

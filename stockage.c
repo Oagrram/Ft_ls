@@ -9,19 +9,13 @@ t_flist		*new_node(void)
 	return (node);
 }
 
-void		getpermition(struct stat fileStat, t_flist **node)
+void	getpermition(struct stat fileStat, t_flist **node)
 {
-	struct passwd *user;
-	struct group *group;
-
-	//struct lstat fileStat;
+	struct passwd	*user;
+	struct group	*group;
 
 	user = getpwuid(fileStat.st_uid);
-	group   =getgrgid(fileStat.st_gid);
-	//group = getgrgid(user->pw_gid);
-	// ft_putstr(" \n");
-	// ft_putstr(group->gr_name);
-	// ft_putstr(" \n");
+	group = getgrgid(fileStat.st_gid);
 	(*node)->permision[0] = ((fileStat.st_mode & S_IRUSR) ? 'r' : '-');
 	(*node)->permision[1] = ((fileStat.st_mode & S_IWUSR) ? 'w' : '-');
 	(*node)->permision[2] = ((fileStat.st_mode & S_IXUSR) ? 'x' : '-');
@@ -36,7 +30,6 @@ void		getpermition(struct stat fileStat, t_flist **node)
 	(*node)->nlink = (fileStat.st_nlink);
 	(*node)->user = (user->pw_name);
 	(*node)->groupe = (group->gr_name);
-	//(*node)->groupe = (group->gr_name);
 	(*node)->size = (fileStat.st_size);
 }
 
@@ -58,16 +51,30 @@ char	getfiletype(mode_t mode)
 		return ('s');
 	else if (S_ISWHT(mode))
 		return ('w');
-	return('?');
+	return ('?');
 }
 
-int stockage(struct stat fileStat , t_flist **node, char *name,char *path)
+int		stockage(struct stat fileStat, t_flist **node, char *name,char *path)
 {
 	ssize_t len;
+	time_t	now;
 
 	(*node)->name = ft_strdup(name);
 	(*node)->mtime = fileStat.st_mtime;
-	(*node)->time = ft_strsub(ctime(&fileStat.st_mtime), 4, 12);
+	time(&now);
+	if (fileStat.st_mtime >= (now - 15552000))
+		(*node)->time = ft_strsub(ctime(&fileStat.st_mtime), 4, 12);
+	else
+	{
+		int i = 0;
+		(*node)->time = ft_strjoin(ft_strsub(ctime(&fileStat.st_mtime), 4, 7),
+		ft_strsub(ctime(&fileStat.st_mtime), 19, 24));
+		while ((*node)->time[i++])
+		{
+			if ((*node)->time[i] == '\n')
+				(*node)->time[i] = '\0';
+		}
+	}
 	(*node)->type = getfiletype(fileStat.st_mode);
 	getpermition(fileStat, &(*node));
 	if ((*node)->type == 'l')
@@ -104,7 +111,6 @@ int		ft_readdir(data system, char *name, file_flags flags)
 		}
 		else
 		{
-			ft_putstr("\n <<it rs EROOR>>\n");
 			ft_putstr("./ft_ls: ");
 			perror(name);
 			return (0);

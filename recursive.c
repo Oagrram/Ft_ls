@@ -1,7 +1,6 @@
 
 #include "ls.h"
 
-
 // void ft_check_folder(t_flist **lst,char *path, file_flags flags)
 // {
 //     char *tmp;
@@ -36,27 +35,21 @@
 //     return (0);
 // }
 
-
-
-void ft_check_folder(t_flist *p,char *path, file_flags flags)
+void		ft_check_folder(t_flist *p, char *path, file_flags flags)
 {
 	char *tmp;
-    char *tofree;
-	//t_flist *ptr;
+	char *tofree;
 
-	//ptr = (lst);
 	if (flags.f_r)
 	{
 		if (p)
 			while ((p)->next != NULL)
-				(p)=(p)->next;
+				(p) = (p)->next;
 	}
 	while (p)
 	{
-		if (!p->name)
-			ft_putendl("is null");
 		if (p->type == 'd' && ft_strcmp(p->name, ".") != 0 && ft_strcmp(p->name, "..") != 0
-				&& ((!flags.f_a && p->name[0] != '.') || (flags.f_a)))
+		&& ((!flags.f_a && p->name[0] != '.') || (flags.f_a)))
 		{
 			if (ft_strcmp(path,"/") == 0)
 			{
@@ -70,6 +63,7 @@ void ft_check_folder(t_flist *p,char *path, file_flags flags)
 				tmp = ft_strjoin(tmp, p->name);
 				ft_strdel(&tofree);
 			}
+			ft_putstr("\n");
 			ft_putstr(tmp);
 			ft_putstr(":\n");
 			ft_recursive(tmp, flags);
@@ -80,6 +74,12 @@ void ft_check_folder(t_flist *p,char *path, file_flags flags)
 		else
 			p = p->next;
 	}
+}
+
+int		ft_recursive(char *path, file_flags flags)
+{
+	ft_get_dir(path, flags);
+	return (0);
 }
 
 // static void show_ls_r(t_files *f, char *path, t_options *op)
@@ -118,10 +118,3 @@ void ft_check_folder(t_flist *p,char *path, file_flags flags)
 //     show_ls_r(f, path, op);
 //     ft_del_files(&tmp);
 // }
-
-int ft_recursive(char *path, file_flags flags)
-{
-	//printf("----------------i am in recurseive  with %s---------------\n",path);
-	ft_get_dir(path,flags);
-	return (0);
-}
