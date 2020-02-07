@@ -1,17 +1,15 @@
 #include "ls.h"
 
-int check_flag(char *argv, file_flags *flags)
+int		check_flag(char *argv, file_flags *flags)
 {
 	int j;
 
 	j = 0;
-	while(argv[++j] != '\0')
+	while (argv[++j] != '\0')
 	{
-		if (argv[0] == '-' && j != 0 && argv[j] != 'l' && argv[j] != 'a' &&
-				argv[j] != 'r' && argv[j] != 'R' && argv[j] != 't' && argv[j] != 'g')
+		if (argv[j] != 'l' && argv[j] != 'a' && argv[j] != 'r'
+		&& argv[j] != 'R' && argv[j] != 't' && argv[j] != 'g')
 		{
-			//printf("ls: illegal option\n");
-			//printf("ft_ls: illegal option -- %c\n", argv[j]);
 			ft_putstr("ft_ls: illegal option -- ");
 			ft_putchar(argv[j]);
 			ft_putendl("");

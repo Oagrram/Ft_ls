@@ -247,14 +247,22 @@ int		main(int argc, char **argv)
 	flags.f_t = 0;
 	flags.f_a = 0;
 	flags.f_l = 0;
-	while (argv[++i] && argv[i][0] == '-' && argv[i][1])
+	while (argv[++i] && argv[i][0] == '-' && argv[i][1] != '-')
 		if (check_flag(argv[i], &flags))
 			return (0);
-	if (!argv[i])
-		ft_get_dir(".", flags);
-	else
+	if (argv[i])
 	{
-		ft_ls(argv, argc, flags, i, &system);
+		if (argv[i][0] == '-' && argv[i][1] == '-' && !argv[i][2] && !argv[i+1])
+		{
+			ft_get_dir(".", flags);
+			return (0);
+		}
+		i++;
 	}
+	else if (!argv[i])
+	{
+		ft_get_dir(".", flags);
+	}
+	ft_ls(argv, argc, flags, i, &system);
 	return (0);
 }
