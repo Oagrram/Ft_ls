@@ -1,4 +1,15 @@
- 
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   print.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: oagrram <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/02/08 23:15:19 by oagrram           #+#    #+#             */
+/*   Updated: 2020/02/08 23:15:22 by oagrram          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ls.h"
 
 void	getmaxint(t_flist *ptr, int *maxnlink, char type)
@@ -9,7 +20,7 @@ void	getmaxint(t_flist *ptr, int *maxnlink, char type)
 	count = 0;
 	if (type == 'l' || type == 's' || type == 'a' || type == 'i')
 	{
-		if(type == 'l')
+		if (type == 'l')
 			tmp = ptr->nlink;
 		else if ((type == 's') && (ptr->type != 'c' && ptr->type != 'b'))
 			tmp = ptr->size;
@@ -43,7 +54,7 @@ int		get_lenght(t_flist *ptr, char type, int ptr_move)
 	{
 		if (type == 'a' || type == 'i')
 		{
-			if(ptr->type == 'c' || ptr->type == 'b')
+			if (ptr->type == 'c' || ptr->type == 'b')
 				getmaxint(ptr, &max, type);
 		}
 		else
@@ -57,12 +68,10 @@ int		get_lenght(t_flist *ptr, char type, int ptr_move)
 	return (max);
 }
 
-void    printlist(t_flist *ptr, file_flags flags, int ptr_move)
+void	printlist(t_flist *ptr, t_flags flag, int ptr_move)
 {
-	maxlength max;
-	t_flist *free;
+	t_maxlength max;
 
-	free = ptr;
 	max.link_length = get_lenght(ptr, 'l', ptr_move);
 	max.user_length = get_lenght(ptr, 'u', ptr_move);
 	max.groupe_length = get_lenght(ptr, 'g', ptr_move);
@@ -71,18 +80,13 @@ void    printlist(t_flist *ptr, file_flags flags, int ptr_move)
 	max.size_length = get_lenght(ptr, 's', ptr_move);
 	while ((ptr) != NULL)
 	{
-		if ((!flags.f_a && (ptr)->name[0] != '.') || (flags.f_a))
+		if ((!flag.f_a && (ptr)->name[0] != '.') || (flag.f_a) || ptr_move == 2)
 		{
-			if ((ptr->type == 'l' && ptr_move == 2 && !flags.f_l && get_link(ptr->name) == 2))
-			{
-				// if (get_link(ptr->name) == 2)
-				// 	ft_get_dir(ptr->name, flags);
-				// else
-					//printnode(ptr, flags, &max);
-					printf("");
-			}
+			if ((ptr->type == 'l' && ptr_move == 2 &&
+			!flag.f_l && get_link(ptr->name) == 2))
+				ft_putstr("");
 			else if ((ptr_move == 2 && ptr->type != 'd') || ptr_move == 1)
-				printnode(ptr, flags, &max);
+				printnode(ptr, flag, &max);
 		}
 		if (ptr_move)
 			ptr = ptr->next;
@@ -101,8 +105,6 @@ void	print_spaces(t_flist *p, int *length, char type, int max, int spacead)
 	if (*length == 0)
 		*length = 1;
 	*length = (max - (*length)) + spacead;
-	//if (*tmplength < 0)
-		//exit(EXIT_FAILURE);
 	while ((*length)-- != 0 && (*length) > -1)
 	{
 		++i;
@@ -110,7 +112,7 @@ void	print_spaces(t_flist *p, int *length, char type, int max, int spacead)
 	}
 }
 
-void	printnode(t_flist *ptr, file_flags flags, maxlength *max)
+void	printnode(t_flist *ptr, t_flags flags, t_maxlength *max)
 {
 	int tmp;
 
@@ -124,16 +126,16 @@ void	printnode(t_flist *ptr, file_flags flags, maxlength *max)
 		ft_putchar(ptr->type);
 		ft_putstr(ptr->permision);
 		ft_putstr("  ");
-		print_spaces(ptr, &tmp,'l', max->link_length, 0);
+		print_spaces(ptr, &tmp, 'l', max->link_length, 0);
 		ft_putnbr(ptr->nlink);
 		ft_putchar(' ');
 		if (!flags.f_g)
 		{
 			ft_putstr(ptr->user);
-			print_spaces(ptr, &tmp,'u', max->user_length, 2);
+			print_spaces(ptr, &tmp, 'u', max->user_length, 2);
 		}
 		ft_putstr(ptr->groupe);
-		print_spaces(ptr, &tmp,'g', max->groupe_length,2);
+		print_spaces(ptr, &tmp, 'g', max->groupe_length, 2);
 		if ((ptr->type != 'c' && ptr->type != 'b'))
 		{
 			if (max->maj_length)

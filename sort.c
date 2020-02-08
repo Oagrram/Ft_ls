@@ -29,7 +29,7 @@ void		swap_rest(t_flist **newnode, t_flist **ptr,t_flist **tmp)
 int		*swap_content(t_flist **newnode, t_flist **ptr)
 {
 	t_flist *tmp;
-	file_flags flags;
+	t_flags flags;
 	int i;
 
 	flags.f_l = 1;
@@ -96,6 +96,33 @@ int		*swap_content(t_flist **newnode, t_flist **ptr)
 	}
 	//free(tmp);
 	swap_rest(newnode, ptr,&(tmp));
+	return (0);
+}
+
+int		sort_eroor(char **t, int i)
+{
+	int		j;
+	t_flist *head;
+	t_flist *node;
+	t_data	sys;
+
+	head = NULL;
+	j = 0;
+	i--;
+	while ((t[++i] != NULL) && ((node = new_node()) != NULL))
+		if (lstat(t[i], &sys.state) == -1 && ++j && (node->name = t[i]) != NULL)
+			sort_by_ascii(&(node), &(head));
+	while (head != NULL)
+	{
+		if (lstat(head->name, &(sys.state)) == -1)
+		{
+			ft_putstr("./ft_ls: ");
+			perror(head->name);
+		}
+		head = head->next;
+	}
+	if (j > 0)
+		return (1);
 	return (0);
 }
 

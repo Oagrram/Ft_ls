@@ -9,28 +9,28 @@ t_flist		*new_node(void)
 	return (node);
 }
 
-void	getpermition(struct stat fileStat, t_flist **node)
+void	getpermition(struct stat state, t_flist **node)
 {
 	struct passwd	*user;
 	struct group	*group;
 
-	user = getpwuid(fileStat.st_uid);
-	group = getgrgid(fileStat.st_gid);
-	(*node)->permision[0] = ((fileStat.st_mode & S_IRUSR) ? 'r' : '-');
-	(*node)->permision[1] = ((fileStat.st_mode & S_IWUSR) ? 'w' : '-');
-	(*node)->permision[2] = ((fileStat.st_mode & S_IXUSR) ? 'x' : '-');
-	(*node)->permision[3] = ((fileStat.st_mode & S_IRGRP) ? 'r' : '-');
-	(*node)->permision[4] = ((fileStat.st_mode & S_IWGRP) ? 'w' : '-');
-	(*node)->permision[5] = ((fileStat.st_mode & S_IXGRP) ? 'x' : '-');
-	(*node)->permision[6] = ((fileStat.st_mode & S_IROTH) ? 'r' : '-');
-	(*node)->permision[7] = ((fileStat.st_mode & S_IWOTH) ? 'w' : '-');
-	(*node)->permision[8] = ((fileStat.st_mode & S_IXOTH) ? 'x' : '-');
+	user = getpwuid(state.st_uid);
+	group = getgrgid(state.st_gid);
+	(*node)->permision[0] = ((state.st_mode & S_IRUSR) ? 'r' : '-');
+	(*node)->permision[1] = ((state.st_mode & S_IWUSR) ? 'w' : '-');
+	(*node)->permision[2] = ((state.st_mode & S_IXUSR) ? 'x' : '-');
+	(*node)->permision[3] = ((state.st_mode & S_IRGRP) ? 'r' : '-');
+	(*node)->permision[4] = ((state.st_mode & S_IWGRP) ? 'w' : '-');
+	(*node)->permision[5] = ((state.st_mode & S_IXGRP) ? 'x' : '-');
+	(*node)->permision[6] = ((state.st_mode & S_IROTH) ? 'r' : '-');
+	(*node)->permision[7] = ((state.st_mode & S_IWOTH) ? 'w' : '-');
+	(*node)->permision[8] = ((state.st_mode & S_IXOTH) ? 'x' : '-');
 	(*node)->permision[9] = (' ');
 	(*node)->permision[9] = ('\0');
-	(*node)->nlink = (fileStat.st_nlink);
+	(*node)->nlink = (state.st_nlink);
 	(*node)->user = (user->pw_name);
 	(*node)->groupe = (group->gr_name);
-	(*node)->size = (fileStat.st_size);
+	(*node)->size = (state.st_size);
 }
 
 char	getfiletype(mode_t mode)
@@ -54,29 +54,29 @@ char	getfiletype(mode_t mode)
 	return ('?');
 }
 
-int		stockage(struct stat fileStat, t_flist **node, char *name,char *path)
+int		stockage(struct stat state, t_flist **node, char *name,char *path)
 {
 	ssize_t len;
 	time_t	now;
 
 	(*node)->name = ft_strdup(name);
-	(*node)->mtime = fileStat.st_mtime;
+	(*node)->mtime = state.st_mtime;
 	time(&now);
-	if (fileStat.st_mtime >= (now - 15552000))
-		(*node)->time = ft_strsub(ctime(&fileStat.st_mtime), 4, 12);
+	if (state.st_mtime >= (now - 15552000))
+		(*node)->time = ft_strsub(ctime(&state.st_mtime), 4, 12);
 	else
 	{
 		int i = 0;
-		(*node)->time = ft_strjoin(ft_strsub(ctime(&fileStat.st_mtime), 4, 7),
-		ft_strsub(ctime(&fileStat.st_mtime), 19, 24));
+		(*node)->time = ft_strjoin(ft_strsub(ctime(&state.st_mtime), 4, 7),
+		ft_strsub(ctime(&state.st_mtime), 19, 24));
 		while ((*node)->time[i++])
 		{
 			if ((*node)->time[i] == '\n')
 				(*node)->time[i] = '\0';
 		}
 	}
-	(*node)->type = getfiletype(fileStat.st_mode);
-	getpermition(fileStat, &(*node));
+	(*node)->type = getfiletype(state.st_mode);
+	getpermition(state, &(*node));
 	if ((*node)->type == 'l')
 	{
 		(*node)->linkedfile = malloc(MAX_PATH + 1);
@@ -85,29 +85,29 @@ int		stockage(struct stat fileStat, t_flist **node, char *name,char *path)
 	}
 	if ((*node)->type == 'b' || (*node)->type == 'c')
 	{
-		(*node)->maj = major(fileStat.st_rdev);
-		(*node)->min = minor(fileStat.st_rdev);
+		(*node)->maj = major(state.st_rdev);
+		(*node)->min = minor(state.st_rdev);
 	}
 	return (0);
 }
 
-int		ft_readdir(data system, char *name, file_flags flags)
+int		ft_readdir(t_data sys, char *name, t_flags flags)
 {
 	char *tmp;
 
-	system.head = NULL;
-	while ((system.sd = readdir(system.dir)) != NULL)
+	sys.head = NULL;
+	while ((sys.sd = readdir(sys.dir)) != NULL)
 	{
-		system.node = new_node();
-		system.path = ft_strjoin(name, "/");
-		tmp = system.path;
-		system.path = ft_strjoin(system.path, (system.sd)->d_name);
+		sys.node = new_node();
+		sys.path = ft_strjoin(name, "/");
+		tmp = sys.path;
+		sys.path = ft_strjoin(sys.path, (sys.sd)->d_name);
 		ft_strdel(&tmp);
-		if (lstat(system.path, &(system.fileStat)) != -1)
+		if (lstat(sys.path, &(sys.state)) != -1)
 		{
-			stockage(system.fileStat, &system.node, (system.sd)->d_name, system.path);
-			sort_by_ascii(&system.node, &system.head);
-			ft_strdel(&system.path);
+			stockage(sys.state, &sys.node, (sys.sd)->d_name, sys.path);
+			sort_by_ascii(&sys.node, &sys.head);
+			ft_strdel(&sys.path);
 		}
 		else
 		{
@@ -117,19 +117,19 @@ int		ft_readdir(data system, char *name, file_flags flags)
 		}
 	}
 	if (flags.f_t)
-		sort_by_time(&system.head);
-	closedir(system.dir);
+		sort_by_time(&sys.head);
+	closedir(sys.dir);
 	 if (!flags.f_r)
-	 	printlist(system.head, flags, 1);
+	 	printlist(sys.head, flags, 1);
 	else
-		reverse_lst(system.head, flags, 1);
-	if (flags.f_R)
-		ft_check_folder(system.head, name, flags);
-	freelist(&system.head);
+		reverse_lst(sys.head, flags, 1);
+	if (flags.f_rm)
+		ft_check_folder(sys.head, name, flags);
+	freelist(&sys.head);
 	return (0);
 }
 
-// int ft_readdir(data system, char *name, file_flags flags)
+// int ft_readdir(t_data sys, char *name, t_flags flags)
 // {
 //     // t_flist *tmp;
 //     char *directories;
@@ -137,76 +137,76 @@ int		ft_readdir(data system, char *name, file_flags flags)
 
 //     // //printf("\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
 //     directories = NULL;
-//     system.head = NULL;
-//     system.path = NULL;
-//     while((system.sd = readdir(system.dir)) != NULL)
+//     sys.head = NULL;
+//     sys.path = NULL;
+//     while((sys.sd = readdir(sys.dir)) != NULL)
 //     {
-//         if (!system.sd)
+//         if (!sys.sd)
 //         {
 //             printf("eroor");
 //             perror("ft_ls :");
 //             return (0);
 //         }
-//         system.node =  new_node();
+//         sys.node =  new_node();
 //         //printf("\t=>%s\n", name);
-//         //ft_strdel(&system.path);
-//         system.path = ft_strjoin(name, "/");
-//         ptr = system.path;
-//         system.path = ft_strjoin(system.path, (system.sd)->d_name);
+//         //ft_strdel(&sys.path);
+//         sys.path = ft_strjoin(name, "/");
+//         ptr = sys.path;
+//         sys.path = ft_strjoin(sys.path, (sys.sd)->d_name);
 //         ft_strdel(&ptr);
-//         if (lstat(system.path, &(system.fileStat)) != -1)
+//         if (lstat(sys.path, &(sys.state)) != -1)
 //         {
-//             if (flags.f_R && S_ISDIR(system.fileStat.st_mode)
-//             && ft_strcmp(ft_strrchr(system.path, '/') + 1, "..")
-//             && ft_strcmp(ft_strrchr(system.path, '/') + 1, "."))
+//             if (flags.f_R && S_ISDIR(sys.state.st_mode)
+//             && ft_strcmp(ft_strrchr(sys.path, '/') + 1, "..")
+//             && ft_strcmp(ft_strrchr(sys.path, '/') + 1, "."))
 //             {
 //                 ptr = directories;
-//                 directories = ft_strjoin(directories, system.path);
+//                 directories = ft_strjoin(directories, sys.path);
 //                 free(ptr);
 //                 ptr = directories;
 //                 directories = ft_strjoin(directories, ":");
 //                 free(ptr);
 //             }
-//             stockage(system.fileStat, &system.node, (system.sd)->d_name,system.path);
-//             sort_by_ascii(&system.node, &system.head);
+//             stockage(sys.state, &sys.node, (sys.sd)->d_name,sys.path);
+//             sort_by_ascii(&sys.node, &sys.head);
 //         }
 //     }
-//      system.directories = ft_strsplit(directories, ':');
+//      sys.directories = ft_strsplit(directories, ':');
 //      free(directories);
 //     if (flags.f_t)
-//         sort_by_time(&system.head);
-//     closedir(system.dir);
+//         sort_by_time(&sys.head);
+//     closedir(sys.dir);
 //     if (!flags.f_r)
-//         printlist(system.head, flags, 1);
+//         printlist(sys.head, flags, 1);
 //     else
-//         reverse_lst(system.head, flags, 1);
-//     if (flags.f_R && system.directories)
+//         reverse_lst(sys.head, flags, 1);
+//     if (flags.f_R && sys.directories)
 //     {
-//         //  ft_check_folder(&system.head,name,flags);
+//         //  ft_check_folder(&sys.head,name,flags);
 //         int i = 0;
-//         while (system.directories[i])
+//         while (sys.directories[i])
 //         {
-//             ft_recursive(system.directories[i],flags);
-//             ft_strdel(&system.directories[i]);
+//             ft_recursive(sys.directories[i],flags);
+//             ft_strdel(&sys.directories[i]);
 //             i++;
 //         }
-//         free(system.directories);
+//         free(sys.directories);
 //      }
 //     //printf("\n+_+_+_+_+_+__+_+_+_+_+_+_+_+_+_+_+_+_+_+_++\n");
 //     /*if (flags.f_t == 1)
-//         sort_by_time(&system.head);
+//         sort_by_time(&sys.head);
 //     printf("here 1\n");
-//     closedir(system.dir);
-//     tmp = system.head;
+//     closedir(sys.dir);
+//     tmp = sys.head;
 //     printf("here 1\n");
 //     if (!flags.f_r)
-//         printlist(system.head,flags,1);
+//         printlist(sys.head,flags,1);
 //     else
-//         reverse_lst(system.head,flags,1);
+//         reverse_lst(sys.head,flags,1);
 //     printf("here 1\n");
 //     if (flags.f_R)
-//         ft_check_folder(&system.head,name,flags);
+//         ft_check_folder(&sys.head,name,flags);
 //     printf("here 1\n");*/
-//     //freelist(&system.head);
+//     //freelist(&sys.head);
 //     return (0);
 // }

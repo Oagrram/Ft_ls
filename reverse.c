@@ -28,9 +28,9 @@ void	freelist(t_flist **head)
 	}
 }
 
-void	reverse_lst(t_flist *ptr, file_flags flags, int ptr_move)
+void	reverse_lst(t_flist *ptr, t_flags flags, int ptr_move)
 {
-	maxlength max;
+	t_maxlength max;
 
 	max.link_length = get_lenght(ptr, 'l', ptr_move);
 	max.user_length = get_lenght(ptr, 'u', ptr_move);
@@ -50,11 +50,11 @@ void	reverse_lst(t_flist *ptr, file_flags flags, int ptr_move)
 	}
 	while ((ptr) != NULL)
 	{
-		if ((!flags.f_a && (ptr)->name[0] != '.') || (flags.f_a))
+		if ((!flags.f_a && (ptr)->name[0] != '.') || (flags.f_a) || ptr_move == 2)
 		{
 			if (ptr->type == 'l' && ptr_move == 2 &&
 			!flags.f_l && get_link(ptr->name) == 2)
-				ft_get_dir(ptr->name, flags);
+				get_dir(ptr->name, flags);
 			else
 				printnode(ptr, flags, &max);
 		}
@@ -63,6 +63,6 @@ void	reverse_lst(t_flist *ptr, file_flags flags, int ptr_move)
 		else
 			ptr = ptr->previous_file;
 	}
-	//if (flags.f_R && flags.f_r)
+	//if (flags.f_rm && flags.f_r)
 		//ft_putchar('\n');
 }

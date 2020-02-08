@@ -1,7 +1,7 @@
 
 #include "ls.h"
 
-// void ft_check_folder(t_flist **lst,char *path, file_flags flags)
+// void ft_check_folder(t_flist **lst,char *path, t_flags flags)
 // {
 //     char *tmp;
 //     t_flist *ptr;
@@ -29,13 +29,13 @@
 //     }
 // }
 
-// int ft_recursive(char *path, file_flags flags)
+// int ft_recursive(char *path, t_flags flags)
 // {
-//     ft_get_dir(path,flags);
+//     get_dir(path,flags);
 //     return (0);
 // }
 
-void		ft_check_folder(t_flist *p, char *path, file_flags flags)
+void		ft_check_folder(t_flist *p, char *path, t_flags flags)
 {
 	char *tmp;
 	char *tofree;
@@ -76,9 +76,9 @@ void		ft_check_folder(t_flist *p, char *path, file_flags flags)
 	}
 }
 
-int		ft_recursive(char *path, file_flags flags)
+int		ft_recursive(char *path, t_flags flags)
 {
-	ft_get_dir(path, flags);
+	get_dir(path, flags);
 	return (0);
 }
 
