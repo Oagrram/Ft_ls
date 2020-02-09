@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   sort.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: oagrram <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/02/09 17:32:42 by oagrram           #+#    #+#             */
+/*   Updated: 2020/02/09 17:32:43 by oagrram          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ls.h"
 
 void		swap_rest(t_flist **newnode, t_flist **ptr,t_flist **tmp)
@@ -133,10 +145,10 @@ t_flist		*sort_by_time(t_flist **head)
 	t_flist *header;
 
 	header = *head;
-	while(header)
+	while (header)
 	{
 		ptr = header;
-		while(ptr)
+		while (ptr)
 		{
 			if ((header->mtime == ptr->mtime && (ft_strcmp(header->name, ptr->name) > 0)) || header->mtime < ptr->mtime)
 				swap_content(&header,&ptr);

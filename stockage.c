@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   stockage.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: oagrram <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/02/09 17:32:51 by oagrram           #+#    #+#             */
+/*   Updated: 2020/02/09 17:32:52 by oagrram          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 
 #include "ls.h"
 
@@ -93,7 +105,8 @@ int		stockage(struct stat state, t_flist **node, char *name,char *path)
 
 int		ft_readdir(t_data sys, char *name, t_flags flags)
 {
-	char *tmp;
+	char	*tmp;
+	int		total = 0;;
 
 	sys.head = NULL;
 	while ((sys.sd = readdir(sys.dir)) != NULL)
@@ -115,12 +128,19 @@ int		ft_readdir(t_data sys, char *name, t_flags flags)
 			perror(name);
 			return (0);
 		}
+		total = total + sys.state.st_blocks;
 	}
 	if (flags.f_t)
 		sort_by_time(&sys.head);
 	closedir(sys.dir);
-	 if (!flags.f_r)
-	 	printlist(sys.head, flags, 1);
+	if (flags.f_l || flags.f_g)
+	{
+		ft_putstr("total ");
+		ft_putnbr(total);
+		ft_putendl("");
+	}
+	if (!flags.f_r)
+		printlist(sys.head, flags, 1);
 	else
 		reverse_lst(sys.head, flags, 1);
 	if (flags.f_rm)

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   check_flag.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: oagrram <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/02/09 17:32:25 by oagrram           #+#    #+#             */
+/*   Updated: 2020/02/09 17:32:26 by oagrram          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ls.h"
 
 int		check_argv(t_flist *p, char c, t_flags flags)
@@ -23,6 +35,22 @@ int		check_argv(t_flist *p, char c, t_flags flags)
 	return (0);
 }
 
+void	get_flag(char c, t_flags *flags)
+{
+	if (c == 'l')
+		flags->f_l = 1;
+	if (c == 'a')
+		flags->f_a = 1;
+	if (c == 'r')
+		flags->f_r = 1;
+	if (c == 'R')
+		flags->f_rm = 1;
+	if (c == 't')
+		flags->f_t = 1;
+	if (c == 'g')
+		flags->f_g = 1;
+}
+
 int		check_flag(char *argv, t_flags *flags)
 {
 	int j;
@@ -34,8 +62,10 @@ int		check_flag(char *argv, t_flags *flags)
 	{
 		if (argv[j] == '-')
 			++count;
-		if ((argv[0] == '-' && argv[j] != 'l' && argv[j] != 'a' && argv[j] != 'r'
-		&& argv[j] != 'R' && argv[j] != 't' && argv[j] != 'g' && argv[j] != '-') 
+		if ((argv[0] == '-' && argv[j] != 'l'
+		&& argv[j] != 'a' && argv[j] != 'r'
+		&& argv[j] != 'R' && argv[j] != 't'
+		&& argv[j] != 'g' && argv[j] != '-')
 		|| (count >= 3))
 		{
 			ft_putstr("ft_ls: illegal option -- ");
@@ -45,20 +75,7 @@ int		check_flag(char *argv, t_flags *flags)
 			return (1);
 		}
 		else
-		{
-			if (argv[j] == 'l')
-				flags->f_l = 1;
-			if (argv[j] == 'a')
-				flags->f_a = 1;
-			if (argv[j] == 'r')
-				flags->f_r = 1;
-			if (argv[j] == 'R')
-				flags->f_rm = 1;
-			if (argv[j] == 't')
-				flags->f_t = 1;
-			if (argv[j] == 'g')
-				flags->f_g = 1;
-		}
+			get_flag(argv[j], flags);
 		//if (count >= 3)
 		//{
 		//	ft_putstr("ft_ls: illegal option -- -");

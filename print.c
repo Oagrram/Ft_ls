@@ -12,60 +12,64 @@
 
 #include "ls.h"
 
-void	getmaxint(t_flist *ptr, int *maxnlink, char type)
+void	print_maj_min(t_flist *ptr, t_maxlength *max)
 {
-	int tmp;
-	int count;
+	print_spaces(ptr, 'a', max->maj_length, 0);
+	ft_putnbr((ptr)->maj);
+	ft_putstr(", ");
+	print_spaces(ptr, 'i', max->min_length, 0);
+	ft_putnbr((ptr)->min);
+}
 
-	count = 0;
-	if (type == 'l' || type == 's' || type == 'a' || type == 'i')
+void	print_other(t_flist *ptr, t_maxlength *max)
+{
+	if ((ptr->type != 'c' && ptr->type != 'b'))
 	{
-		if (type == 'l')
-			tmp = ptr->nlink;
-		else if ((type == 's') && (ptr->type != 'c' && ptr->type != 'b'))
-			tmp = ptr->size;
-		else if (type == 'a' && (ptr->type == 'c' || ptr->type == 'b'))
-			tmp = ptr->maj;
+		if (max->maj_length)
+			print_spaces(ptr, 's', max->size_length, max->min_length);
 		else
-			tmp = ptr->min;
-		while (tmp != 0)
-		{
-			tmp /= 10;
-			++count;
-		}
+			print_spaces(ptr, 's', max->size_length, 0);
+		ft_putnbr(ptr->size);
+	}
+	else
+		print_maj_min(ptr, max);
+	ft_putchar(' ');
+	ft_putstr(ptr->time);
+	ft_putchar(' ');
+	ft_putstr(ptr->name);
+	if (ptr->linkedfile && ptr->type == 'l')
+	{
+		ft_putstr(" -> ");
+		ft_putstr(ptr->linkedfile);
+		ft_strdel(&ptr->linkedfile);
+	}
+}
+
+void	printnode(t_flist *ptr, t_flags flags, t_maxlength *max)
+{
+	if (!flags.f_l && !flags.f_g)
+	{
+		ft_putstr(ptr->name);
+		ft_putchar('\n');
 	}
 	else
 	{
-		if (type == 'u')
-			count = ft_strlen(ptr->user);
-		else
-			count = ft_strlen(ptr->groupe);
-	}
-	if (count > *maxnlink)
-		*maxnlink = count;
-}
-
-int		get_lenght(t_flist *ptr, char type, int ptr_move)
-{
-	int max;
-
-	max = 0;
-	while (ptr)
-	{
-		if (type == 'a' || type == 'i')
+		ft_putchar(ptr->type);
+		ft_putstr(ptr->permision);
+		ft_putstr("  ");
+		print_spaces(ptr, 'l', max->link_length, 0);
+		ft_putnbr(ptr->nlink);
+		ft_putchar(' ');
+		if (!flags.f_g)
 		{
-			if (ptr->type == 'c' || ptr->type == 'b')
-				getmaxint(ptr, &max, type);
+			ft_putstr(ptr->user);
+			print_spaces(ptr, 'u', max->user_length, 2);
 		}
-		else
-			getmaxint(ptr, &max, type);
-		if (ptr_move == 1)
-			ptr = ptr->next;
-		else
-			ptr = ptr->next_file;
+		ft_putstr(ptr->groupe);
+		print_spaces(ptr, 'g', max->groupe_length, 2);
+		print_other(ptr, max);
+		ft_putchar('\n');
 	}
-	//printf("max of %c === %d\n",type,max);
-	return (max);
 }
 
 void	printlist(t_flist *ptr, t_flags flag, int ptr_move)
@@ -92,76 +96,5 @@ void	printlist(t_flist *ptr, t_flags flag, int ptr_move)
 			ptr = ptr->next;
 		else
 			ptr = ptr->next_file;
-	}
-}
-
-void	print_spaces(t_flist *p, int *length, char type, int max, int spacead)
-{
-	int i;
-
-	i = 0;
-	*length = 0;
-	getmaxint(p, length, type);
-	if (*length == 0)
-		*length = 1;
-	*length = (max - (*length)) + spacead;
-	while ((*length)-- != 0 && (*length) > -1)
-	{
-		++i;
-		ft_putchar(' ');
-	}
-}
-
-void	printnode(t_flist *ptr, t_flags flags, t_maxlength *max)
-{
-	int tmp;
-
-	if (!flags.f_l)
-	{
-		ft_putstr(ptr->name);
-		ft_putchar('\n');
-	}
-	else
-	{
-		ft_putchar(ptr->type);
-		ft_putstr(ptr->permision);
-		ft_putstr("  ");
-		print_spaces(ptr, &tmp, 'l', max->link_length, 0);
-		ft_putnbr(ptr->nlink);
-		ft_putchar(' ');
-		if (!flags.f_g)
-		{
-			ft_putstr(ptr->user);
-			print_spaces(ptr, &tmp, 'u', max->user_length, 2);
-		}
-		ft_putstr(ptr->groupe);
-		print_spaces(ptr, &tmp, 'g', max->groupe_length, 2);
-		if ((ptr->type != 'c' && ptr->type != 'b'))
-		{
-			if (max->maj_length)
-				print_spaces(ptr, &tmp, 's', max->size_length, max->min_length);
-			else
-				print_spaces(ptr, &tmp, 's', max->size_length, 0);
-			ft_putnbr(ptr->size);
-		}
-		else
-		{
-			print_spaces(ptr, &tmp, 'a', max->maj_length, 0);
-			ft_putnbr((ptr)->maj);
-			ft_putstr(", ");
-			print_spaces(ptr, &tmp, 'i', max->min_length, 0);
-			ft_putnbr((ptr)->min);
-		}
-		ft_putchar(' ');
-		ft_putstr(ptr->time);
-		ft_putchar(' ');
-		ft_putstr(ptr->name);
-		if (ptr->linkedfile && ptr->type == 'l')
-		{
-			ft_putstr(" -> ");
-			ft_putstr(ptr->linkedfile);
-			ft_strdel(&ptr->linkedfile);
-		}
-		ft_putchar('\n');
 	}
 }

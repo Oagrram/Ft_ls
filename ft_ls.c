@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: oagrram <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/02/08 21:42:48 by oagrram           #+#    #+#             */
-/*   Updated: 2020/02/08 21:42:51 by oagrram          ###   ########.fr       */
+/*   Created: 2020/02/09 14:51:55 by oagrram           #+#    #+#             */
+/*   Updated: 2020/02/09 14:51:58 by oagrram          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ void	struct_ins(t_ftls *str, char **argv, int i, t_flags flags)
 	int j;
 
 	j = 0;
+	str->c = 0;
 	str->head = NULL;
 	str->nero = sort_eroor(argv, i);
 	while (argv[i] && ((str->node = new_node()) != NULL))
