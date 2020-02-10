@@ -12,6 +12,14 @@
 
 #include "ls.h"
 
+t_flist	*new_node(void)
+{
+	t_flist	*node;
+
+	node = (t_flist*)ft_memalloc(sizeof(t_flist));
+	return (node);
+}
+
 int		check_argv(t_flist *p, char c, t_flags flags)
 {
 	int d;
@@ -76,13 +84,6 @@ int		check_flag(char *argv, t_flags *flags)
 		}
 		else
 			get_flag(argv[j], flags);
-		//if (count >= 3)
-		//{
-		//	ft_putstr("ft_ls: illegal option -- -");
-		//	ft_putendl("");
-		//	ft_putendl("usage: ls [-alrRtg] [file ...]");
-		//	return (1);
-		//}
 	}
 	return (0);
 }

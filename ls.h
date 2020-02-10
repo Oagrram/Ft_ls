@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ls.h                                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: oagrram <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/02/10 01:36:34 by oagrram           #+#    #+#             */
+/*   Updated: 2020/02/10 01:36:35 by oagrram          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #ifndef LS_H
 # define LS_H
@@ -15,7 +26,7 @@
 # include <grp.h>
 # include <time.h>
 
-# define MAX_PATH    4096
+# define MAX_PATH	4096
 
 typedef	struct		s_flags
 {
@@ -46,7 +57,6 @@ typedef	struct		s_flist
 	struct s_flist	*previous;
 	struct s_flist	*next_file;
 	struct s_flist	*previous_file;
-
 }					t_flist;
 
 typedef struct		s_data
@@ -82,22 +92,21 @@ typedef	struct		s_ftls
 }					t_ftls;
 
 t_flist	*new_node(void);
-t_flist	*sort_by_time(t_flist **head);
-t_flist	*sort_by_ascii(t_flist **node, t_flist **lst);
+int		sort_by_time(t_flist **head);
+int		sort_by_ascii(t_flist **node, t_flist **head);
 char	getfiletype(mode_t	mode);
 int		stockage(struct stat state, t_flist **node, char *name, char *path);
 int		check_flag(char *argv, t_flags *flags);
 int		get_dir(char *name, t_flags flags);
 int		sort_eroor(char **t, int i);
 int		check_argv(t_flist *p, char c, t_flags flags);
-void	freelist(t_flist **head);
-void	printlist(t_flist *ptr, t_flags flags, int ptr_move);
+void	freelist(t_flist **head, int i);
 void	printnode(t_flist	*head, t_flags flags, t_maxlength *max);
 void	printlist(t_flist *ptr, t_flags flag, int ptr_move);
 void	print_spaces(t_flist *p, char type, int max, int spacead);
 void	ft_check_folder(t_flist *p, char *path, t_flags flags);
-void	freelist(t_flist **head);
 void	swapelement(t_flist **node, t_flist **next);
+int		swap_content(t_flist **newnode, t_flist **p);
 void	reverse_lst(t_flist	*ptr, t_flags flags, int ptr_move);
 void	ft_pathjoin(char **s1, char *s2);
 void	get_files(t_flist **ptr, t_flags flags);
@@ -105,5 +114,4 @@ int		get_lenght(t_flist *ptr, char type, int ptr_move);
 int		ft_readdir(t_data system, char *name, t_flags flags);
 int		ft_recursive(char *path, t_flags flags);
 int		get_link(char *name);
-
 #endif

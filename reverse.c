@@ -10,10 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "ls.h"
 
-void	freelist(t_flist **head)
+void	freelist(t_flist **head, int i)
 {
 	t_flist *tmp;
 
@@ -21,60 +20,59 @@ void	freelist(t_flist **head)
 	{
 		tmp = *head;
 		*head = (*head)->next;
-		ft_strdel(&tmp->name);
-		ft_strdel(&tmp->time);
-	//    ft_strdel(&tmp->user);
-	//    ft_strdel(&tmp->groupe);
-	//
-	//    if (tmp->next_file)
-	//    {
-	//         ft_strdel(&tmp->name);
-	//         ft_strdel(&tmp->time);
-	//         ft_strdel(&tmp->user);
-	//         ft_strdel(&tmp->groupe);
-	//if (tmp->linkedfile)
-	   // ft_strdel(&tmp->linkedfile);
-	//         ft_memdel((void**)&tmp->next_file);
-	//    }
-	ft_memdel((void**)&(tmp));
+		if (i == 2)
+		{
+			ft_strdel(&tmp->name);
+			ft_memdel((void**)&(tmp));
+		}
+		else
+		{
+			ft_strdel(&tmp->name);
+			ft_strdel(&tmp->time);
+			ft_memdel((void**)&(tmp));
+		}
 	}
 }
 
-void	reverse_lst(t_flist *ptr, t_flags flags, int ptr_move)
+int		p_move(t_flist **p, int ptr_move)
 {
-	t_maxlength max;
-
-	max.link_length = get_lenght(ptr, 'l', ptr_move);
-	max.user_length = get_lenght(ptr, 'u', ptr_move);
-	max.groupe_length = get_lenght(ptr, 'g', ptr_move);
-	max.maj_length = get_lenght(ptr, 'a', ptr_move);
-	max.min_length = get_lenght(ptr, 'i', ptr_move);
-	max.size_length = get_lenght(ptr, 's', ptr_move);
 	if (ptr_move == 1)
 	{
-		while ((ptr)->next != NULL)
-			ptr = ptr->next;
+		while ((*p)->next != NULL)
+			(*p) = (*p)->next;
 	}
 	else
 	{
-		while ((ptr)->next_file != NULL)
-			ptr = ptr->next_file;
+		while ((*p)->next_file != NULL)
+			(*p) = (*p)->next_file;
 	}
-	while ((ptr) != NULL)
+	return (0);
+}
+
+void	reverse_lst(t_flist *p, t_flags flags, int ptr_move)
+{
+	t_maxlength max;
+
+	max.link_length = get_lenght(p, 'l', ptr_move);
+	max.user_length = get_lenght(p, 'u', ptr_move);
+	max.groupe_length = get_lenght(p, 'g', ptr_move);
+	max.maj_length = get_lenght(p, 'a', ptr_move);
+	max.min_length = get_lenght(p, 'i', ptr_move);
+	max.size_length = get_lenght(p, 's', ptr_move);
+	p_move(&(p), ptr_move);
+	while (p != NULL)
 	{
-		if ((!flags.f_a && (ptr)->name[0] != '.') || (flags.f_a) || ptr_move == 2)
+		if ((!flags.f_a && p->name[0] != '.') || (flags.f_a) || ptr_move == 2)
 		{
-			if (ptr->type == 'l' && ptr_move == 2 &&
-			!flags.f_l && get_link(ptr->name) == 2)
-				get_dir(ptr->name, flags);
+			if (p->type == 'l' && ptr_move == 2 &&
+			!flags.f_l && get_link(p->name) == 2)
+				get_dir(p->name, flags);
 			else
-				printnode(ptr, flags, &max);
+				printnode(p, flags, &max);
 		}
 		if (ptr_move == 1)
-			ptr = ptr->previous;
+			p = p->previous;
 		else
-			ptr = ptr->previous_file;
+			p = p->previous_file;
 	}
-	//if (flags.f_rm && flags.f_r)
-		//ft_putchar('\n');
 }

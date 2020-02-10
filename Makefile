@@ -26,7 +26,7 @@ FLAG = -g -Wall -Wextra -Werror
 
 all: $(NAME)
 
-$(NAME): $(LIB)
+$(NAME): $(LIB) 
 		gcc $(FLAG) $(SRC) $(LIB) -o $(NAME)
 
 $(LIB):
