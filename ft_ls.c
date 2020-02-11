@@ -90,7 +90,7 @@ int		main(int argc, char **argv)
 
 	i = 0;
 	ft_zero(&flags);
-	while (argv[++i] && argv[i][0] == '-')
+	while (argv[++i] && argv[i][0] == '-' && argv[i][1])
 		if (check_flag(argv[i], &flags))
 			return (0);
 	if (argv[i])
