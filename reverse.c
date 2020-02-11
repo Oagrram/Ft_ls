@@ -12,6 +12,12 @@
 
 #include "ls.h"
 
+void	print_pathh(char *path)
+{
+	ft_putstr(path);
+	ft_putstr(":\n");
+}
+
 void	freelist(t_flist **head, int i)
 {
 	t_flist *tmp;
@@ -21,10 +27,7 @@ void	freelist(t_flist **head, int i)
 		tmp = *head;
 		*head = (*head)->next;
 		if (i == 2)
-		{
-			ft_strdel(&tmp->name);
 			ft_memdel((void**)&(tmp));
-		}
 		else
 		{
 			ft_strdel(&tmp->name);

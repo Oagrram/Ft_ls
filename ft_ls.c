@@ -18,6 +18,7 @@ int		get_argument(t_flist **argument, char *argv, t_flist **head)
 
 	if (lstat(argv, &(sys.state)) != -1)
 	{
+		*argument = new_node();
 		stockage(sys.state, &(*argument), argv, argv);
 		sort_by_ascii(&(*argument), &(*head));
 	}
@@ -32,10 +33,9 @@ void	struct_ins(t_ftls *str, char **argv, int i, t_flags flags)
 	str->c = 0;
 	str->head = NULL;
 	str->nero = sort_eroor(argv, i);
-	while (argv[i] && ((str->node = new_node()) != NULL))
-		if (get_argument(&str->node, argv[i++], &str->head) == 1)
-			j++;
-	if (j == str->argc || str->head == NULL)
+	while (argv[i])
+		get_argument(&str->node, argv[i++], &str->head);
+	if (str->head == NULL)
 		return ;
 	str->nf = check_argv(str->head, 'f', flags);
 	str->nd = check_argv(str->head, 'd', flags);
@@ -51,6 +51,7 @@ void	ft_ls(char **argv, int argc, t_flags flags, int i)
 
 	str.argc = argc;
 	struct_ins(&str, argv, i, flags);
+	str.node = str.head;
 	while (str.head != NULL)
 	{
 		if ((str.head->type == 'd') || (str.head->type == 'l' &&
@@ -60,10 +61,7 @@ void	ft_ls(char **argv, int argc, t_flags flags, int i)
 				ft_putstr("\n");
 			if ((str.nf >= 1 && str.nd >= 1) ||
 			str.nd >= 2 || (str.nero == 1 && str.c == 0))
-			{
-				ft_putstr(str.head->name);
-				ft_putstr(":\n");
-			}
+				print_pathh(str.head->name);
 			get_dir(str.head->name, flags);
 		}
 		if (!flags.f_r)
@@ -72,6 +70,7 @@ void	ft_ls(char **argv, int argc, t_flags flags, int i)
 			str.head = str.head->previous;
 		++str.c;
 	}
+	freelist(&(str.node), 1);
 }
 
 void	ft_zero(t_flags *flags)

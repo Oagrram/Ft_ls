@@ -12,6 +12,21 @@
 
 #include "ls.h"
 
+void	print_error(t_flist *head)
+{
+	t_data	sys;
+
+	while (head != NULL)
+	{
+		if (lstat(head->name, &(sys.state)) == -1)
+		{
+			ft_putstr("./ft_ls: ");
+			perror(head->name);
+		}
+		head = head->next;
+	}
+}
+
 int		sort_eroor(char **t, int i)
 {
 	int		j;
@@ -22,19 +37,19 @@ int		sort_eroor(char **t, int i)
 	head = NULL;
 	j = 0;
 	i--;
-	while ((t[++i] != NULL) && ((node = new_node()) != NULL))
-		if (lstat(t[i], &sys.state) == -1 && ++j && (node->name = t[i]) != NULL)
-			sort_by_ascii(&(node), &(head));
-	while (head != NULL)
+	while ((t[++i] != NULL))
 	{
-		if (lstat(head->name, &(sys.state)) == -1)
+		if (lstat(t[i], &sys.state) == -1 && ++j)
 		{
-			ft_putstr("./ft_ls: ");
-			perror(head->name);
+			node = new_node();
+			node->name = t[i];
+			sort_by_ascii(&(node), &(head));
 		}
-		head = head->next;
 	}
-	freelist(&(head), 2);
+	sys.node = head ? head : NULL;
+	print_error(head);
+	if (sys.node)
+		freelist(&(sys.node), 2);
 	if (j > 0)
 		return (1);
 	return (0);

@@ -80,6 +80,8 @@ int			get_time(struct stat state, t_flist *node)
 {
 	int		i;
 	time_t	now;
+	char	*sub1;
+	char	*sub2;
 
 	i = 0;
 	time(&now);
@@ -87,8 +89,11 @@ int			get_time(struct stat state, t_flist *node)
 		(*node).time = ft_strsub(ctime(&state.st_mtime), 4, 12);
 	else
 	{
-		(*node).time = ft_strjoin(ft_strsub(ctime(&state.st_mtime), 4, 7),
-		ft_strsub(ctime(&state.st_mtime), 19, 24));
+		sub1 = ft_strsub(ctime(&state.st_mtime), 4, 7);
+		sub2 = ft_strsub(ctime(&state.st_mtime), 19, 24);
+		(*node).time = ft_strjoin(sub1, sub2);
+		ft_strdel(&sub1);
+		ft_strdel(&sub2);
 		while ((*node).time[i++])
 			if ((*node).time[i] == '\n')
 				(*node).time[i] = '\0';

@@ -106,6 +106,7 @@ void	printlist(t_flist *ptr, t_flags flag, int ptr_move);
 void	print_spaces(t_flist *p, char type, int max, int spacead);
 void	ft_check_folder(t_flist *p, char *path, t_flags flags);
 void	swapelement(t_flist **node, t_flist **next);
+void	print_pathh(char *path);
 int		swap_content(t_flist **newnode, t_flist **p);
 void	reverse_lst(t_flist	*ptr, t_flags flags, int ptr_move);
 void	ft_pathjoin(char **s1, char *s2);
