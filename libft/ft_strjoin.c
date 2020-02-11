@@ -12,15 +12,24 @@
 
 #include "libft.h"
 
+char	*check_arg(char const *s1, char const *s2)
+{
+	if (s1)
+		return (ft_strdup(s1));
+	if (s2)
+		return (ft_strdup(s2));
+	return (NULL);
+}
+
 char	*ft_strjoin(char const *s1, char const *s2)
 {
 	int		len;
 	char	*a;
 
 	if (s1 == NULL || s2 == NULL)
-		return (NULL);
+		return (check_arg(s1, s2));
 	len = ft_strlen(s1) + ft_strlen(s2);
-	a = (char *)malloc(sizeof(*a) * (len + 1));
+	a = (char *)ft_memalloc(sizeof(char) * (len + 1));
 	if (a == NULL)
 		return ((char *)NULL);
 	ft_strcpy(a, s1);

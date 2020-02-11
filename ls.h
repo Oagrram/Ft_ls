@@ -40,7 +40,7 @@ typedef	struct		s_flags
 typedef	struct		s_flist
 {
 	int				nlink;
-	int				size;
+	long long int	size;
 	int				mtime;
 	int				maj;
 	int				min;

@@ -10,34 +10,45 @@
 #                                                                              #
 # **************************************************************************** #
 
-NAME = ft_ls
+NAME= ft_ls
 
-LIB = libft.a
+SRC= check_flag.c \
+	ft_ls.c \
+	ft_readdir.c \
+	get_dir.c \
+	get_files.c \
+	print.c \
+	print_spaces.c \
+	recursive.c \
+	reverse.c \
+	sort.c \
+	stockage.c \
+	swap_content.c
+	 
 
-SRC = *.c
+OBJ= $(SRC:.c=.o)
 
-LIBSRC = libft/*.c
+CC= gcc
+CFLAGS= -Wall -Wextra -Werror
 
-INCLDS = ls.h
-
-LIBINCLDS = libft/libft.h
-
-FLAG = -g -Wall -Wextra -Werror
-
+.PHONY: all
 all: $(NAME)
 
-$(NAME): $(LIB) 
-		gcc $(FLAG) $(SRC) $(LIB) -o $(NAME)
+$(NAME): $(OBJ)
+	make -C libft
+	$(CC) $(CFLAGS) libft/libft.a $(OBJ) -o $(NAME)
+	
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
-$(LIB):
-		gcc $(FLAG) -c $(LIBSRC) -I $(LIBINCLDS)
-		ar rc $(LIB) *.o
+.PHONY: clean
 clean:
-		/bin/rm -f *.o
-		/bin/rm -f .DS_Store
+		make clean -C libft
+		rm -f $(OBJ)
 
+.PHONY: fclean
 fclean: clean
-		/bin/rm -f $(NAME)
-		/bin/rm -f $(LIB)
+		make fclean -C libft
+		rm -f $(NAME)
 
 re: fclean all
