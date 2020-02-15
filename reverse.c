@@ -30,6 +30,8 @@ void	freelist(t_flist **head, int i)
 			ft_memdel((void**)&(tmp));
 		else
 		{
+			if (tmp->type == 'l' && tmp->linkedfile)
+				ft_strdel(&tmp->linkedfile);
 			ft_strdel(&tmp->name);
 			ft_strdel(&tmp->time);
 			ft_memdel((void**)&(tmp));
@@ -69,7 +71,7 @@ void	reverse_lst(t_flist *p, t_flags flags, int ptr_move)
 		{
 			if (p->type == 'l' && ptr_move == 2 &&
 			!flags.f_l && get_link(p->name) == 2)
-				get_dir(p->name, flags);
+				ft_putstr("");
 			else
 				printnode(p, flags, &max);
 		}

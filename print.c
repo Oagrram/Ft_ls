@@ -92,7 +92,7 @@ void	printlist(t_flist *ptr, t_flags flag, int ptr_move)
 			else if ((ptr_move == 2 && ptr->type != 'd') || ptr_move == 1)
 				printnode(ptr, flag, &max);
 		}
-		if (ptr_move)
+		if (ptr_move == 1)
 			ptr = ptr->next;
 		else
 			ptr = ptr->next_file;
