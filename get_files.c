@@ -73,7 +73,6 @@ void	get_files(t_flist **ptr, t_flags flags)
 	tmp = (*ptr);
 	if (flags.f_t)
 	{
-		//printf(" i am");
 		sort_by_time(&(*ptr));
 		tmp = (*ptr);
 	}
