@@ -21,7 +21,8 @@ int		get_link(char *name)
 	tmp = 0;
 	str.path = name;
 	tmplink = ft_strnew(MAX_PATH);
-	while ((tmp = readlink(str.path, tmplink, MAX_PATH + 1) >= 0))
+	while ((tmp = readlink(str.path, tmplink, MAX_PATH + 1) >= 0) &&
+	ft_strcmp(str.path, tmplink) != 0)
 		str.path = tmplink;
 	if (name[0] == '/')
 		tmplink = ft_strjoin("/", tmplink);
